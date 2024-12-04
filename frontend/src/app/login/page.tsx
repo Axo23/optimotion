@@ -3,7 +3,7 @@
 import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import Image from 'next/image';
+import Logo from "@/components/logo";
 
 interface LoginFormValues {
   emailOrUsername: string;
@@ -31,14 +31,7 @@ const Login: React.FC = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-background relative">
       {/* Logo */}
       <div className="absolute top-5 left-5">
-        <Image
-          src="/images/optimotion-logo.png"
-          alt="OptiMotion Logo"
-          width={48}
-          height={48} // Ensure to define width and height
-          priority // Ensures this image loads early for performance
-          className="w-12 h-12"
-        />
+        <Logo width={64} height={64} className="rounded-lg" />
       </div>
 
       {/* Welcome Text */}
