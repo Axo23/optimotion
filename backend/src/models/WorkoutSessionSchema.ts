@@ -1,8 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
 const WorkoutSessionSchema = new mongoose.Schema({
-    sessionID: { type: String, required: true },
-    userID: { type: String, required: true },
+    userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
     date: { type: Date, required: true },
     workout: { type: mongoose.Schema.Types.ObjectId, ref: "Workout" }, // Reference to Workout
   });

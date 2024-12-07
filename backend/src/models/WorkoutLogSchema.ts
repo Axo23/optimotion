@@ -1,8 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
 const WorkoutLogSchema = new mongoose.Schema({
-    logID: { type: String, required: true },
-    userID: { type: String, required: true },
+    userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
     date: { type: Date, required: true },
     exercise: [{ type: mongoose.Schema.Types.ObjectId, ref: "Exercise" }],
     duration: { type: Number, required: true },

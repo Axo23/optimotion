@@ -1,11 +1,11 @@
-import { v4 as uuidv4 } from "uuid";
+
 export class Goal {
-    goalID: string;
+    _id: string;
     userID: string;
     description: string;
   
-    constructor(userID: string, description: string) {
-      this.goalID = uuidv4();
+    constructor(_id: string, userID: string, description: string) {
+      this._id = _id;
       this.userID = userID;
       this.description = description;
     }

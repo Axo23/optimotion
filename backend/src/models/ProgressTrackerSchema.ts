@@ -1,8 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
 const ProgressTrackerSchema = new mongoose.Schema({
-    trackerID: { type: String, required: true },
-    userID: { type: String, required: true },
+    userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
     workoutLogs: [{ type: mongoose.Schema.Types.ObjectId, ref: "WorkoutLog" }],
     weightLog: { type: Map, of: Number },
   });

@@ -1,12 +1,12 @@
 import { Message } from "./Message";
 
 export class TrainerInteraction {
-    interactionID: string;
+    _id: string;
     userID: string;
     messages: Message[];
   
-    constructor(interactionID: string, userID: string, messages: Message[]) {
-      this.interactionID = interactionID;
+    constructor(_id: string, userID: string, messages: Message[]) {
+      this._id = _id;
       this.userID = userID;
       this.messages = messages;
     }

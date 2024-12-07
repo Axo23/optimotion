@@ -1,7 +1,7 @@
-import { v4 as uuidv4 } from "uuid";
+
 
 export class Exercise {
-    exerciseID: string;
+    _id: string;
     name: string;
     description: string;
     minRepetitions: number;
@@ -12,6 +12,7 @@ export class Exercise {
     pauseTimer: number;
   
     constructor(
+      _id: string,
       name: string,
       description: string,
       minRepetitions: number,
@@ -21,7 +22,7 @@ export class Exercise {
       superset: boolean,
       pauseTimer: number
     ) {
-      this.exerciseID = uuidv4();
+      this._id = _id;
       this.name = name;
       this.description = description;
       this.minRepetitions = minRepetitions;

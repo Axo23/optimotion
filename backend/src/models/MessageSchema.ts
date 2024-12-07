@@ -1,8 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
 const MessageSchema = new mongoose.Schema({
-    messageID: { type: String, required: true },
-    userID: { type: String, required: true },
+    userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
     timeStamp: { type: Date, required: true },
     content: { type: String, required: true },
     sender: { type: String, required: true },

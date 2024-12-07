@@ -1,20 +1,20 @@
 import { Exercise } from './Excercise';
 
 export class WorkoutLog {
-    logID: string;
+    _id: string;
     userID: string;
     date: Date;
     exercise: Exercise[];
     duration: number;
   
     constructor(
-      logID: string,
+      _id: string,
       userID: string,
       date: Date,
       exercise: Exercise[],
       duration: number
     ) {
-      this.logID = logID;
+      this._id = _id;
       this.userID = userID;
       this.date = date;
       this.exercise = exercise;

@@ -1,13 +1,13 @@
 import { Workout } from './Workout';
 
 export class WorkoutSession {
-    sessionID: string;
+    _id: string;
     userID: string;
     date: Date;
     workout: Workout;
   
-    constructor(sessionID: string, userID: string, date: Date, workout: Workout) {
-      this.sessionID = sessionID;
+    constructor(_id: string, userID: string, date: Date, workout: Workout) {
+      this._id = _id;
       this.userID = userID;
       this.date = date;
       this.workout = workout;

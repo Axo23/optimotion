@@ -1,6 +1,6 @@
 import { Exercise } from './Excercise';
 export class Workout {
-    workoutID: string;
+    _id: string;
     userID: string;
     name: string;
     exercises: Exercise[];
@@ -9,7 +9,7 @@ export class Workout {
     endDate: Date;
   
     constructor(
-      workoutID: string,
+      _id: string,
       userID: string,
       name: string,
       exercises: Exercise[],
@@ -17,7 +17,7 @@ export class Workout {
       startDate: Date,
       endDate: Date
     ) {
-      this.workoutID = workoutID;
+      this._id = _id;
       this.userID = userID;
       this.name = name;
       this.exercises = exercises;
