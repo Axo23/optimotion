@@ -1,51 +1,60 @@
 'use client';
 
 import React, { useState } from 'react';
+import Sidebar from '@/components/sidebar';
 import ChatInput from '@/components/chatInput';
 import MessageList from '@/components/messageList';
-
-interface Message {
-  sender: 'user' | 'coach';
-  message: string;
-}
+import Logo from "@/components/logo";
 
 const ChatPage: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-
-  const handleSendMessage = async (userMessage: string) => {
-    // Add user message to the chat
-    setMessages((prev) => [...prev, { sender: 'user', message: userMessage }]);
-
-    try {
-      const response = await fetch('http://localhost:5000/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: userMessage }),
-      });
-
-      const data = await response.json();
-      if (data.reply) {
-        setMessages((prev) => [...prev, { sender: 'coach', message: data.reply }]);
-      } else {
-        throw new Error('No response from server.');
-      }
-    } catch (error) {
-      console.error(error);
-      setMessages((prev) => [
-        ...prev,
-        { sender: 'coach', message: 'Error: Unable to get a response.' },
-      ]);
-    }
-  };
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="flex flex-col h-screen bg-background text-lightblue">
-      <div className="flex-grow overflow-auto">
-        <MessageList messages={messages} />
+    <div className="flex flex-row h-screen bg-black text-lightblue relative">
+      {/* Logo Outside Sidebar */}
+      <div className="absolute top-2 left-2">
+        <Logo width={150} height={150} className="rounded-lg" />
       </div>
-      <ChatInput onSendMessage={handleSendMessage} />
+
+      {/* Sidebar */}
+      <div className="w-1/5 bg-gray-800 flex flex-col pt-40">
+        <div className="flex-grow px-4 space-y-2">
+          <h2 className="text-xl font-bold text-white">Conversations</h2>
+          <ul className="space-y-2">
+            {['Welcome!'].map((conversation, index) => (
+              <li
+                key={index}
+                className="bg-gray-700 p-2 rounded-md text-white cursor-pointer hover:bg-gray-600"
+              >
+                {conversation}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex flex-col flex-grow">
+        <div className="flex-grow overflow-auto px-[30%] md:px-[20%]">
+          <MessageList messages={[]} />
+        </div>
+
+        {/* Chat Input */}
+        <div className="px-[30%] md:px-[20%]">
+          <ChatInput onSendMessage={() => {}} />
+        </div>
+      </div>
+
+      {/* Burger Menu */}
+      <button
+        onClick={() => setMenuOpen(!menuOpen)}
+        className="absolute top-4 right-4 z-50 bg-gray-700 p-4 rounded-md text-white hover:bg-gray-600 text-2xl"
+        >
+        ☰
+      </button>
+
+      {/* Sidebar */}
+      {menuOpen && <Sidebar />}
     </div>
   );
 };

@@ -5,9 +5,9 @@ export class User {
     name: string;
     email: string;
     password: string;
+    age: number;
     fitnessLevel: string;
     goals: string[];
-    age: number;
     weight: number;
     height: number;
   
@@ -16,9 +16,9 @@ export class User {
       name: string,
       email: string,
       password: string,
+      age: number,
       fitnessLevel: string,
       goals: string[],
-      age: number,
       weight: number,
       height: number
     ) {
@@ -26,9 +26,9 @@ export class User {
       this.name = name;
       this.email = email;
       this.password = password;
+      this.age = age;
       this.fitnessLevel = fitnessLevel;
       this.goals = goals;
-      this.age = age;
       this.weight = weight;
       this.height = height;
     }

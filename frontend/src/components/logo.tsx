@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 
@@ -9,15 +7,18 @@ interface LogoProps {
   className?: string; // Optional className for custom styling
 }
 
-const Logo: React.FC<LogoProps> = ({ width = 48, height = 48, className }) => {
+const Logo: React.FC<LogoProps> = ({ width = 96, height = 96, className }) => {
   return (
     <Image
-      src="/images/optimotion-logo.png" // Ensure the logo is in the public/images directory
+      src="/images/opti-logo-sliced-removebg.png"
       alt="OptiMotion Logo"
       width={width}
       height={height}
       priority
       className={className}
+      style={{
+        backgroundColor: 'transparent',
+      }}
     />
   );
 };
