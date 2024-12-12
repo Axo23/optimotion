@@ -1,23 +1,94 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AuthMiddleware from '@/components/AuthMiddleware';
 import Sidebar from '@/components/sidebar';
 import Logo from '@/components/logo';
 
+interface User {
+  name: string;
+  email: string;
+  password: string;
+  age: string;
+  weight: string;
+  height: string;
+  fitnessLevel: string;
+  goals: string[];
+}
+
 const ProfilePage: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [goals, setGoals] = useState<string[]>(['Lose weight', 'Build muscle']);
+  const [user, setUser] = useState<User>({
+    name: '',
+    email: '',
+    password: '',
+    age: '',
+    weight: '',
+    height: '',
+    fitnessLevel: 'Beginner',
+    goals: [],
+  });
   const [newGoal, setNewGoal] = useState<string>('');
+
+  useEffect(() => {
+    // Fetch user data on mount
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/routes/user/profile', {
+          credentials: 'include',
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setUser(data.user);
+        } else {
+          console.error(data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleAddGoal = () => {
     if (newGoal.trim() === '') return;
-    setGoals((prev) => [...prev, newGoal.trim()]);
+    setUser((prev) => ({
+      ...prev,
+      goals: [...prev.goals, newGoal.trim()],
+    }));
     setNewGoal('');
   };
 
   const handleRemoveGoal = (index: number) => {
-    setGoals((prev) => prev.filter((_, i) => i !== index));
+    setUser((prev) => ({
+      ...prev,
+      goals: prev.goals.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/routes/user/updateUser', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(user),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert('Profile updated successfully!');
+      } else {
+        console.error(data.message);
+        alert('Failed to update profile.');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('An error occurred while updating your profile.');
+    }
   };
 
   return (
@@ -34,7 +105,8 @@ const ProfilePage: React.FC = () => {
                 <label className="block text-sm font-medium">Name</label>
                 <input
                   type="text"
-                  placeholder="John Doe"
+                  value={user.name}
+                  onChange={(e) => setUser({ ...user, name: e.target.value })}
                   className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
                 />
               </div>
@@ -42,7 +114,8 @@ const ProfilePage: React.FC = () => {
                 <label className="block text-sm font-medium">Email</label>
                 <input
                   type="email"
-                  placeholder="john.doe@example.com"
+                  value={user.email}
+                  onChange={(e) => setUser({ ...user, email: e.target.value })}
                   className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
                 />
               </div>
@@ -50,7 +123,8 @@ const ProfilePage: React.FC = () => {
                 <label className="block text-sm font-medium">Password</label>
                 <input
                   type="password"
-                  placeholder="••••••••"
+                  value={user.password}
+                  onChange={(e) => setUser({ ...user, password: e.target.value })}
                   className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
                 />
               </div>
@@ -58,7 +132,8 @@ const ProfilePage: React.FC = () => {
                 <label className="block text-sm font-medium">Age</label>
                 <input
                   type="text"
-                  placeholder="25"
+                  value={user.age}
+                  onChange={(e) => setUser({ ...user, age: e.target.value })}
                   className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
                 />
               </div>
@@ -66,7 +141,8 @@ const ProfilePage: React.FC = () => {
                 <label className="block text-sm font-medium">Weight (kg)</label>
                 <input
                   type="text"
-                  placeholder="70"
+                  value={user.weight}
+                  onChange={(e) => setUser({ ...user, weight: e.target.value })}
                   className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
                 />
               </div>
@@ -74,13 +150,16 @@ const ProfilePage: React.FC = () => {
                 <label className="block text-sm font-medium">Height (cm)</label>
                 <input
                   type="text"
-                  placeholder="175"
+                  value={user.height}
+                  onChange={(e) => setUser({ ...user, height: e.target.value })}
                   className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium">Fitness Level</label>
                 <select
+                  value={user.fitnessLevel}
+                  onChange={(e) => setUser({ ...user, fitnessLevel: e.target.value })}
                   className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
                 >
                   <option value="Sedentary">Sedentary</option>
@@ -93,7 +172,7 @@ const ProfilePage: React.FC = () => {
               <div>
                 <label className="block text-sm font-medium">Goals</label>
                 <ul className="space-y-2 mt-2">
-                  {goals.map((goal, index) => (
+                  {user.goals.map((goal, index) => (
                     <li key={index} className="flex items-center">
                       <span className="flex-grow">{goal}</span>
                       <button
@@ -122,7 +201,10 @@ const ProfilePage: React.FC = () => {
                 </div>
               </div>
               <div className="text-right">
-                <button className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                <button
+                  onClick={handleSaveChanges}
+                  className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                >
                   Save Changes
                 </button>
               </div>

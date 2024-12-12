@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
+import { hashPassword } from "../../utils/hashPassword";
 import { UserModel } from "../../models/UserSchema";
 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
@@ -17,18 +17,16 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
       return;
     }
 
+    // Hash the password
+    const hashedPassword = await hashPassword(password);
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-
+    // Create a new user
     const newUser = new UserModel({
       name,
       email,
       password: hashedPassword,
       age,
     });
-
 
     await newUser.save();
 
