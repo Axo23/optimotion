@@ -101,6 +101,12 @@ const Login: React.FC = () => {
             </Form>
           )}
         </Formik>
+        <p className="mt-6 text-sm text-center text-white">
+          Don&apos;t have an account yet?{" "}
+          <a href="/register" className="hover:text-orange transition-all text-lightblue">
+            Register here!
+          </a>
+        </p>
       </div>
     </div>
   );

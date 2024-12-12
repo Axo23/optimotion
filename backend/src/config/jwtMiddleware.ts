@@ -8,7 +8,6 @@ export const authenticateJWT = (
   next: NextFunction
 ): void => {
   const token = req.cookies.jwt;
-  console.log("JWT Token:", token); // Debug
   if (!token) {
     res.status(401).json({ message: "Unauthorized" });
     return;
@@ -16,7 +15,6 @@ export const authenticateJWT = (
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    console.log("Decoded JWT:", decoded); // Debug
     req.user = decoded;
     next();
   } catch (error) {

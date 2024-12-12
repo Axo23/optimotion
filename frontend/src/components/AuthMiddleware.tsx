@@ -12,7 +12,6 @@ const AuthMiddleware: React.FC<{ children: React.ReactNode }> = ({ children }) =
         const response = await fetch("http://localhost:5000/routes/user/checkAuth", {
           credentials: "include",
         });
-        console.log("Auth response:", response.status);
         if (!response.ok) {
           router.push("/login");
         }

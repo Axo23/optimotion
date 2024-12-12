@@ -10,7 +10,9 @@ if (!uri) {
 
 export async function connectDB() {
   try {
-    await mongoose.connect(uri);
+    await mongoose.connect(uri, {
+      dbName: "optimotion",
+    });
     console.log("Connected to MongoDB with Mongoose!");
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
