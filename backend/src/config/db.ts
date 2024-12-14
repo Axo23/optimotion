@@ -1,12 +1,8 @@
+// src/config/db.ts
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+import { config } from "./env"; // Import the centralized config
 
-dotenv.config();
-
-const uri = process.env.MONGO_URI!;
-if (!uri) {
-  throw new Error("MONGO_URI is not defined in the environment variables");
-}
+const uri = config.MONGO_URI;
 
 export async function connectDB() {
   try {

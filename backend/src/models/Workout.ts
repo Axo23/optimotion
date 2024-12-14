@@ -1,9 +1,9 @@
-import { Exercise } from './Excercise';
+import { WorkoutExercise } from './WorkoutExcercise';
 export class Workout {
     _id: string;
     userID: string;
     name: string;
-    exercises: Exercise[];
+    exercises: WorkoutExercise[];
     duration: number;
     startDate: Date;
     endDate: Date;
@@ -12,7 +12,7 @@ export class Workout {
       _id: string,
       userID: string,
       name: string,
-      exercises: Exercise[],
+      exercises: WorkoutExercise[],
       duration: number,
       startDate: Date,
       endDate: Date
