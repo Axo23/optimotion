@@ -1,0 +1,29 @@
+import OpenAI from 'openai';
+
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+export const getOpenAIResponse = async (userMessage: string): Promise<string> => {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a professional fitness coach. Provide tailored fitness advice, training tips, and motivation for users looking to achieve their health goals.',
+        },
+        { role: 'user', content: userMessage },
+      ],
+      max_tokens: 150,
+    });
+
+    // Return the assistant's reply
+    return completion.choices[0]?.message?.content?.trim() || 'No response from assistant.';
+  } catch (error) {
+    console.error('Error communicating with OpenAI:', error);
+    throw new Error('Error communicating with OpenAI API.');
+  }
+};

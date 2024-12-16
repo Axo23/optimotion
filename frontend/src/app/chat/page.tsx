@@ -15,13 +15,25 @@ interface Message {
 
 const ChatPage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [trainerInteractionID, setTrainerInteractionID] = useState<string | null>(null);
 
+  // Handles new messages and updates the message list
   const handleNewMessages = (newMessages: Message[]) => {
     setMessages((prev) => [...prev, ...newMessages]);
   };
 
-  const handleSelectConversation = (conversation: string) => {
-    console.log("Selected Conversation:", conversation);
+  // Handles new interactions (when starting a new chat)
+  const handleNewInteraction = (newID: string) => {
+    console.log("New Trainer Interaction ID:", newID);
+    setTrainerInteractionID(newID);
+    setMessages([]); // Reset message list for the new interaction
+  };
+
+  // Handles conversation selection in the sidebar
+  const handleSelectConversation = (conversationID: string) => {
+    console.log("Selected Conversation:", conversationID);
+    setTrainerInteractionID(conversationID);
+    setMessages([]); // Load messages for this conversation here (if needed)
   };
 
   return (
@@ -33,6 +45,7 @@ const ChatPage: React.FC = () => {
       <div className="flex-1 flex flex-col ml-64">
         {/* Logo */}
         <Logo width={150} height={150} />
+
         {/* Messages List */}
         <div className="flex-grow overflow-auto px-[30%] md:px-[20%] py-8">
           <MessageList messages={messages} />
@@ -40,7 +53,11 @@ const ChatPage: React.FC = () => {
 
         {/* Chat Input */}
         <div className="px-[30%] md:px-[20%] pb-8">
-          <ChatInput onNewMessage={handleNewMessages} />
+          <ChatInput
+            onNewMessage={handleNewMessages}
+            trainerInteractionID={trainerInteractionID}
+            onNewInteraction={handleNewInteraction}
+          />
         </div>
       </div>
 

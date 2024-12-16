@@ -99,11 +99,11 @@ const ProfilePage: React.FC = () => {
       <div className="min-h-screen bg-black text-lightblue relative">
         <Logo width={150} height={150} />
         <div className="flex flex-col items-center justify-center min-h-screen">
-          <div className="max-w-3xl w-full bg-gray-800 shadow-md rounded-lg p-6 text-white">
-            <h1 className="text-2xl font-bold mb-6 text-center">Profile</h1>
+          <div className="max-w-3xl w-full bg-gray-900 shadow-md rounded-lg p-6 text-lightblue">
+            <h1 className="text-3xl font-bold mb-6 text-center">Profile</h1>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium">Name</label>
+                <label className="block text-xl font-medium">Name</label>
                 <input
                   type="text"
                   value={user.name}
@@ -112,7 +112,7 @@ const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">Email</label>
+                <label className="block text-xl font-medium">Email</label>
                 <input
                   type="email"
                   value={user.email}
@@ -121,7 +121,7 @@ const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">Password</label>
+                <label className="block text-xl font-medium">Password</label>
                 <input
                   type="password"
                   value={user.password}
@@ -130,7 +130,7 @@ const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">Age</label>
+                <label className="block text-xl font-medium">Age</label>
                 <input
                   type="text"
                   value={user.age}
@@ -139,7 +139,7 @@ const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">Weight (kg)</label>
+                <label className="block text-xl font-medium">Weight (kg)</label>
                 <input
                   type="text"
                   value={user.weight}
@@ -148,7 +148,7 @@ const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">Height (cm)</label>
+                <label className="block text-xl font-medium">Height (cm)</label>
                 <input
                   type="text"
                   value={user.height}
@@ -157,7 +157,7 @@ const ProfilePage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">Fitness Level</label>
+                <label className="block text-xl font-medium">Fitness Level</label>
                 <select
                   value={user.fitnessLevel}
                   onChange={(e) => setUser({ ...user, fitnessLevel: e.target.value })}
@@ -171,7 +171,7 @@ const ProfilePage: React.FC = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium">Goals</label>
+                <label className="block text-xl font-medium">Goals</label>
                 <ul className="space-y-2 mt-2">
                   {user.goals.map((goal, index) => (
                     <li key={index} className="flex items-center">

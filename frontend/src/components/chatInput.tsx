@@ -2,9 +2,15 @@ import React, { useState } from "react";
 
 interface ChatInputProps {
   onNewMessage: (newMessages: { sender: "user" | "coach"; message: string }[]) => void;
+  trainerInteractionID: string | null; // Pass the interaction ID for ongoing chats
+  onNewInteraction: (newTrainerInteractionID: string) => void; // Callback when a new chat is created
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onNewMessage }) => {
+const ChatInput: React.FC<ChatInputProps> = ({
+  onNewMessage,
+  trainerInteractionID,
+  onNewInteraction,
+}) => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -12,25 +18,38 @@ const ChatInput: React.FC<ChatInputProps> = ({ onNewMessage }) => {
     e.preventDefault();
     if (!input.trim()) return;
 
-    // Add user message to the messages array
-    onNewMessage([{ sender: "user", message: input }]);
-
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/routes/api/chat", {
+      // Call sendMessage API
+      const response = await fetch("http://localhost:5000/routes/chat/sendMessage", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: input.trim() }),
+        credentials: "include", // Required for JWT-based authentication
+        body: JSON.stringify({
+          content: input.trim(),
+          sender: "user",
+          trainerInteractionID,
+        }),
       });
 
       const data = await response.json();
 
-      if (response.ok && data.reply) {
-        // Add coach response to the messages array
-        onNewMessage([{ sender: "coach", message: data.reply }]);
+      if (response.ok) {
+        // Add user message to the message list
+        onNewMessage([{ sender: "user", message: input }]);
+
+        // Add coach's response to the message list
+        if (data.coachMessage) {
+          onNewMessage([{ sender: "coach", message: data.coachMessage.content }]);
+        }
+
+        // If a new trainerInteractionID is created, update the parent
+        if (!trainerInteractionID) {
+          onNewInteraction(data.trainerInteractionID);
+        }
       } else {
         console.error("Error sending message:", data.message || "Unknown error");
         onNewMessage([

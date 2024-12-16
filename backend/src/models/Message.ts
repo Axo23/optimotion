@@ -2,20 +2,20 @@
 
 export class Message {
     _id: string;
-    userID: string;
+    trainerInteractionID: string;
     timeStamp: Date;
     content: string;
     sender: string;
   
     constructor(
       _id: string,
-      userID: string,
+      trainerInteractionID: string,
       timeStamp: Date,
       content: string,
       sender: string
     ) {
       this._id = _id;
-      this.userID = userID;
+      this.trainerInteractionID = trainerInteractionID;
       this.timeStamp = timeStamp;
       this.content = content;
       this.sender = sender;
