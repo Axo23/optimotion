@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import AuthMiddleware from '@/components/AuthMiddleware';
+import AuthMiddleware from '@/components/authMiddleware';
 import Sidebar from '@/components/sidebar';
 import Logo from '@/components/logo';
+import BurgerMenu from "@/components/burgerMenu";
 
 interface User {
   name: string;
@@ -17,7 +18,6 @@ interface User {
 }
 
 const ProfilePage: React.FC = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User>({
     name: '',
     email: '',
@@ -31,23 +31,26 @@ const ProfilePage: React.FC = () => {
   const [newGoal, setNewGoal] = useState<string>('');
 
   useEffect(() => {
-    // Fetch user data on mount
     const fetchUserData = async () => {
       try {
         const response = await fetch('http://localhost:5000/routes/user/profile', {
           credentials: 'include',
         });
         const data = await response.json();
-        if (response.ok) {
-          setUser(data.user);
+        if (response.ok && data.user) {
+          setUser((prevUser) => ({
+            ...prevUser,
+            ...data.user,
+            goals: data.user.goals || [],
+          }));
         } else {
-          console.error(data.message);
+          console.error(data.message || "Failed to fetch user data");
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
-
+  
     fetchUserData();
   }, []);
 
@@ -94,9 +97,7 @@ const ProfilePage: React.FC = () => {
   return (
     <AuthMiddleware>
       <div className="min-h-screen bg-black text-lightblue relative">
-        <div className="absolute top-2 left-2">
-          <Logo width={150} height={150} className="rounded-lg" />
-        </div>
+        <Logo width={150} height={150} />
         <div className="flex flex-col items-center justify-center min-h-screen">
           <div className="max-w-3xl w-full bg-gray-800 shadow-md rounded-lg p-6 text-white">
             <h1 className="text-2xl font-bold mb-6 text-center">Profile</h1>
@@ -211,13 +212,8 @@ const ProfilePage: React.FC = () => {
             </div>
           </div>
         </div>
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="absolute top-4 right-4 z-50 bg-gray-700 p-4 rounded-md text-white hover:bg-gray-600 text-2xl"
-        >
-          ☰
-        </button>
-        {menuOpen && <Sidebar />}
+        {/* Burger Menu for Right Sidebar */}
+        <BurgerMenu sidebarContent={<Sidebar />} />
       </div>
     </AuthMiddleware>
   );

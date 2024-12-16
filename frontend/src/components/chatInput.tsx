@@ -49,13 +49,13 @@ const ChatInput: React.FC<ChatInputProps> = ({ onNewMessage }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex p-4 bg-foreground rounded-lg shadow-md">
+    <form onSubmit={handleSubmit} className="flex p-4 bg-gray-900 rounded-lg shadow-md">
       <input
         type="text"
         placeholder="Type your message..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        className="flex-grow px-4 py-2 border rounded-lg bg-background text-lightblue focus:outline-none"
+        className="flex-grow px-4 py-2 border rounded-lg bg-gray-900 text-lightblue focus:outline-none"
         disabled={isLoading}
       />
       <button
