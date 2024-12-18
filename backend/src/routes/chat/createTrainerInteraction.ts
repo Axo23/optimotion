@@ -14,11 +14,16 @@ export const createTrainerInteraction = async (
       return;
     }
 
-    // Create a new trainer interaction with the current timestamp
+    const currentTime = new Date();
+    const formattedDate = `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`;
+    const title = `Coach Session from ${formattedDate}`;
+
+    // Create a new trainer interaction with a title and timestamp
     const newInteraction = new TrainerInteractionModel({
       userID: userId,
       messages: [],
-      timeStamp: new Date(),
+      timeStamp: currentTime,
+      title,
     });
 
     const savedInteraction = await newInteraction.save();

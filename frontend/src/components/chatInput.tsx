@@ -1,13 +1,16 @@
 import React, { useState } from "react";
+import { Message } from "@/types/message";
 
 interface ChatInputProps {
-  onNewMessage: (newMessages: { sender: "user" | "coach"; message: string }[]) => void;
-  trainerInteractionID: string | null; // Pass the interaction ID for ongoing chats
-  onNewInteraction: (newTrainerInteractionID: string) => void; // Callback when a new chat is created
+  onNewMessage: (newMessages: Message[]) => void;
+  setLoading: (loading: boolean) => void;
+  trainerInteractionID?: string;
+  onNewInteraction: (newID: string) => void;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({
   onNewMessage,
+  setLoading,
   trainerInteractionID,
   onNewInteraction,
 }) => {
@@ -18,16 +21,14 @@ const ChatInput: React.FC<ChatInputProps> = ({
     e.preventDefault();
     if (!input.trim()) return;
 
+    setLoading(true);
     setIsLoading(true);
 
     try {
-      // Call sendMessage API
       const response = await fetch("http://localhost:5000/routes/chat/sendMessage", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Required for JWT-based authentication
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           content: input.trim(),
           sender: "user",
@@ -38,32 +39,32 @@ const ChatInput: React.FC<ChatInputProps> = ({
       const data = await response.json();
 
       if (response.ok) {
-        // Add user message to the message list
-        onNewMessage([{ sender: "user", message: input }]);
+        const userMessage: Message = {
+          sender: "user",
+          content: input,
+          timeStamp: new Date().toISOString(),
+        };
 
-        // Add coach's response to the message list
-        if (data.coachMessage) {
-          onNewMessage([{ sender: "coach", message: data.coachMessage.content }]);
-        }
+        const coachMessage: Message = {
+          sender: "coach",
+          content: data.coachMessage.content,
+          timeStamp: new Date().toISOString(),
+        };
 
-        // If a new trainerInteractionID is created, update the parent
+        onNewMessage([userMessage, coachMessage]);
+
         if (!trainerInteractionID) {
           onNewInteraction(data.trainerInteractionID);
         }
       } else {
-        console.error("Error sending message:", data.message || "Unknown error");
-        onNewMessage([
-          { sender: "coach", message: "Error: Unable to get a response." },
-        ]);
+        console.error("Error sending message:", data.message);
       }
     } catch (error) {
       console.error("Error calling sendMessage API:", error);
-      onNewMessage([
-        { sender: "coach", message: "Error: Unable to get a response." },
-      ]);
     } finally {
-      setInput("");
+      setLoading(false);
       setIsLoading(false);
+      setInput("");
     }
   };
 
@@ -71,9 +72,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
     <form onSubmit={handleSubmit} className="flex p-4 bg-gray-900 rounded-lg shadow-md">
       <input
         type="text"
-        placeholder="Type your message..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        placeholder="Type your message..."
         className="flex-grow px-4 py-2 border rounded-lg bg-gray-900 text-lightblue focus:outline-none"
         disabled={isLoading}
       />

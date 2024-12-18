@@ -36,7 +36,6 @@ const Login: React.FC = () => {
       });
 
       if (response.ok) {
-        alert("Login successful!");
         router.push("/chat");
       } else {
         const data = await response.json();
@@ -51,60 +50,45 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black relative">
-      <div className="absolute top-2 left-2">
-        <Logo width={200} height={200} className="rounded-lg" />
-      </div>
-      <h1 className="text-4xl font-bold text-white mb-8 text-center">Welcome to OptiMotion</h1>
-      <div className="w-full max-w-md p-6 bg-darkgrey rounded-lg shadow-lg">
+    <div className="min-h-screen bg-black text-lightblue flex flex-col items-center justify-center">
+      <Logo width={150} height={150} />
+      <div className="max-w-md w-full bg-gray-900 shadow-md rounded-lg p-6">
+        <h1 className="text-3xl font-bold mb-6 text-center">Login</h1>
         <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
           {({ isSubmitting }) => (
-            <Form className="space-y-6">
-              {/* Email Input */}
+            <Form className="space-y-4">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-lightblue">
-                  Email
-                </label>
+                <label className="block text-xl font-medium">Email</label>
                 <Field
-                  type="text"
-                  id="email"
+                  type="email"
                   name="email"
-                  className="w-full px-4 py-2 mt-2 border border-lightblue rounded-lg bg-background text-lightblue focus:outline-none focus:ring-2 focus:ring-lightblue focus:border-transparent"
-                  placeholder="Email"
+                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
                 />
-                <ErrorMessage name="email" component="p" className="text-sm text-orange mt-1" />
+                <ErrorMessage name="email" component="p" className="text-sm text-red-500 mt-1" />
               </div>
-
-              {/* Password Input */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-lightblue">
-                  Password
-                </label>
+                <label className="block text-xl font-medium">Password</label>
                 <Field
                   type="password"
-                  id="password"
                   name="password"
-                  className="w-full px-4 py-2 mt-2 border border-lightblue rounded-lg bg-background text-lightblue focus:outline-none focus:ring-2 focus:ring-lightblue focus:border-transparent"
-                  placeholder="Your Password"
+                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
                 />
-                <ErrorMessage name="password" component="p" className="text-sm text-orange mt-1" />
+                <ErrorMessage name="password" component="p" className="text-sm text-red-500 mt-1" />
               </div>
-
-              {/* Login Button */}
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full px-4 py-2 mt-4 text-white bg-orange rounded-lg hover:bg-lightblue transition-all focus:outline-none focus:ring-2 focus:ring-lightblue"
+                className="w-full px-4 py-2 mt-2 bg-green-600 rounded-md hover:bg-green-700 transition-all text-white font-bold"
               >
                 {isSubmitting ? "Logging in..." : "Log In"}
               </button>
             </Form>
           )}
         </Formik>
-        <p className="mt-6 text-sm text-center text-white">
-          Don&apos;t have an account yet?{" "}
-          <a href="/register" className="hover:text-orange transition-all text-lightblue">
-            Register here!
+        <p className="mt-4 text-center text-lg">
+          Don&apos;t have an account?{" "}
+          <a href="/register" className="text-lightblue hover:text-orange transition">
+            Register here
           </a>
         </p>
       </div>

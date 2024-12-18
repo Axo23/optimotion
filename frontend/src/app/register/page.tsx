@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -38,26 +38,17 @@ const Register: React.FC = () => {
     age: Yup.string().required("Age is required"),
   });
 
-  const onSubmit = async (
-    values: RegistrationFormValues,
-    { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }
-  ) => {
+  const onSubmit = async (values: RegistrationFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
     try {
-      const response = await fetch(
-        "http://localhost:5000/routes/user/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        }
-      );
+      const response = await fetch("http://localhost:5000/routes/user/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
 
       const data = await response.json();
 
       if (response.ok) {
-        alert("Registration successful!");
         router.push("/login");
       } else {
         alert(data.message || "Registration failed");
@@ -71,157 +62,78 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black relative">
-      {/* Logo */}
-      <div className="absolute top-2 left-2">
-        <Logo width={200} height={200} className="rounded-lg" />
-      </div>
-
-      {/* Welcome Text */}
-      <h1 className="text-4xl font-bold text-white mb-8 text-center">
-        Create Your OptiMotion Account
-      </h1>
-
-      {/* Form Container */}
-      <div className="w-full max-w-md p-6 bg-darkgrey rounded-lg shadow-lg">
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={onSubmit}
-        >
-          {() => (
-            <Form className="space-y-6">
-              {/* Name Input */}
+    <div className="min-h-screen bg-black text-lightblue flex flex-col items-center justify-center">
+      <Logo width={150} height={150} />
+      <div className="max-w-md w-full bg-gray-900 shadow-md rounded-lg p-6">
+        <h1 className="text-3xl font-bold mb-6 text-center">Register</h1>
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+          {({ isSubmitting }) => (
+            <Form className="space-y-4">
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-lightblue"
-                >
-                  Name
-                </label>
+                <label className="block text-xl font-medium">Name</label>
                 <Field
                   type="text"
-                  id="name"
                   name="name"
-                  className="w-full px-4 py-2 mt-2 border border-lightblue rounded-lg bg-background text-white focus:outline-none focus:ring-2 focus:ring-lightblue focus:border-transparent"
-                  placeholder="Your Name"
+                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
                 />
-                <ErrorMessage
-                  name="name"
-                  component="p"
-                  className="text-sm text-red-600 mt-1"
-                />
+                <ErrorMessage name="name" component="p" className="text-sm text-red-500 mt-1" />
               </div>
-
-              {/* Email Input */}
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-lightblue"
-                >
-                  Email
-                </label>
+                <label className="block text-xl font-medium">Email</label>
                 <Field
                   type="email"
-                  id="email"
                   name="email"
-                  className="w-full px-4 py-2 mt-2 border border-lightblue rounded-lg bg-background text-white focus:outline-none focus:ring-2 focus:ring-lightblue focus:border-transparent"
-                  placeholder="Your Email Address"
+                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
                 />
-                <ErrorMessage
-                  name="email"
-                  component="p"
-                  className="text-sm text-red-600 mt-1"
-                />
+                <ErrorMessage name="email" component="p" className="text-sm text-red-500 mt-1" />
               </div>
-
-              {/* Age Dropdown */}
               <div>
-                <label
-                  htmlFor="age"
-                  className="block text-sm font-medium text-lightblue"
-                >
-                  Age
-                </label>
+                <label className="block text-xl font-medium">Password</label>
+                <Field
+                  type="password"
+                  name="password"
+                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
+                />
+                <ErrorMessage name="password" component="p" className="text-sm text-red-500 mt-1" />
+              </div>
+              <div>
+                <label className="block text-xl font-medium">Confirm Password</label>
+                <Field
+                  type="password"
+                  name="confirmPassword"
+                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
+                />
+                <ErrorMessage name="confirmPassword" component="p" className="text-sm text-red-500 mt-1" />
+              </div>
+              <div>
+                <label className="block text-xl font-medium">Age</label>
                 <Field
                   as="select"
-                  id="age"
                   name="age"
-                  className="w-full px-4 py-2 mt-2 border border-lightblue rounded-lg bg-background text-white focus:outline-none focus:ring-2 focus:ring-lightblue focus:border-transparent"
+                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
                 >
-                  <option value="">Select your age</option>
+                  <option value="">Select Age</option>
                   {Array.from({ length: 90 }, (_, i) => 10 + i).map((age) => (
                     <option key={age} value={age}>
                       {age}
                     </option>
                   ))}
                 </Field>
-                <ErrorMessage
-                  name="age"
-                  component="p"
-                  className="text-sm text-red-600 mt-1"
-                />
+                <ErrorMessage name="age" component="p" className="text-sm text-red-500 mt-1" />
               </div>
-
-              {/* Password Input */}
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-lightblue"
-                >
-                  Password
-                </label>
-                <Field
-                  type="password"
-                  id="password"
-                  name="password"
-                  className="w-full px-4 py-2 mt-2 border border-lightblue rounded-lg bg-background text-white focus:outline-none focus:ring-2 focus:ring-lightblue focus:border-transparent"
-                  placeholder="Your Password"
-                />
-                <ErrorMessage
-                  name="password"
-                  component="p"
-                  className="text-sm text-red-600 mt-1"
-                />
-              </div>
-
-              {/* Confirm Password Input */}
-              <div>
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-lightblue"
-                >
-                  Confirm Password
-                </label>
-                <Field
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  className="w-full px-4 py-2 mt-2 border border-lightblue rounded-lg bg-background text-white focus:outline-none focus:ring-2 focus:ring-lightblue focus:border-transparent"
-                  placeholder="Confirm Your Password"
-                />
-                <ErrorMessage
-                  name="confirmPassword"
-                  component="p"
-                  className="text-sm text-red-600 mt-1"
-                />
-              </div>
-
-              {/* Register Button */}
               <button
                 type="submit"
-                className="w-full px-4 py-2 mt-4 text-white bg-lightblue rounded-lg hover:bg-orange transition-all focus:outline-none focus:ring-2 focus:ring-lightblue"
+                disabled={isSubmitting}
+                className="w-full px-4 py-2 bg-green-600 rounded-md hover:bg-green-700 transition-all text-white font-bold"
               >
-                Register
+                {isSubmitting ? "Registering..." : "Register"}
               </button>
             </Form>
           )}
         </Formik>
-
-        {/* Already Registered */}
-        <p className="mt-6 text-sm text-center text-white">
+        <p className="mt-4 text-center text-lg">
           Already have an account?{" "}
-          <a href="/login" className="hover:text-orange transition-all text-lightblue">
+          <a href="/login" className="text-lightblue hover:text-orange transition">
             Log In
           </a>
         </p>
