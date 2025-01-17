@@ -3,10 +3,12 @@ import { MessageModel } from '../../models/MessageSchema';
 import { TrainerInteractionModel } from '../../models/TrainerInteractionSchema';
 import { getOpenAIResponse } from '../../utils/getOpenAIResponse';
 import { IGetUserAuthInfoRequest } from '../../types/requests';
+import { ChatGptMessage } from '../../types/chatGPTMessage';
+import { MessageRequestBody } from '../../types/messageRequestBody';
 
 export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): Promise<void> => {
-  const { content, sender, trainerInteractionID } = req.body;
-
+  const { content, sender, trainerInteractionID }: MessageRequestBody = req.body;
+  
   if (!content || !sender) {
     res.status(400).json({ message: 'Content and sender are required.' });
     return;
@@ -53,8 +55,19 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
     trainerInteraction.messages.push(savedUserMessage._id);
     await trainerInteraction.save();
 
+    // Load all messages of the interaction
+    const messages = await MessageModel.find({ trainerInteractionID }).sort({ timeStamp: 1 });
+
+    const chatGptMessages: ChatGptMessage[] = messages.map((msg) =>  {
+      return {
+        role: msg.sender === "coach" ? "assistant" : "user",
+        content: msg.content,
+        name:  msg.sender === "coach" ? "assistant" : "user"
+      };
+    });
+
     // Fetch the coach's response using OpenAI
-    const coachResponse = await getOpenAIResponse(content);
+    const coachResponse = await getOpenAIResponse(chatGptMessages);
 
     // Save the coach's message
     const coachMessage = new MessageModel({
