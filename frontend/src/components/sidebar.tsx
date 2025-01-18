@@ -29,30 +29,30 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-0 right-0 w-64 bg-gray-900 text-lightblue h-full shadow-lg z-40 flex flex-col justify-between">
+    <div className="fixed top-0 right-0 w-64 bg-secondary text-primary h-full shadow-lg z-40 flex flex-col justify-between">
       <div className="text-center space-y-8 mt-28">
         <ul className="space-y-8 text-2xl font-bold">
           <li
             onClick={() => handleNavigation("/profile")}
-            className="cursor-pointer hover:text-orange transition-all"
+            className="cursor-pointer hover:text-tertiary transition-all"
           >
             Profile
           </li>
           <li
             onClick={() => handleNavigation("/chat")}
-            className="cursor-pointer hover:text-orange transition-all"
+            className="cursor-pointer hover:text-tertiary transition-all"
           >
             Chat
           </li>
           <li
             onClick={() => handleNavigation("/workouts")}
-            className="cursor-pointer hover:text-orange transition-all"
+            className="cursor-pointer hover:text-tertiary transition-all"
           >
             Workouts
           </li>
           <li
             onClick={() => handleNavigation("/logs")}
-            className="cursor-pointer hover:text-orange transition-all"
+            className="cursor-pointer hover:text-tertiary transition-all"
           >
             Logs
           </li>
@@ -61,13 +61,14 @@ const Sidebar: React.FC = () => {
       <div className="p-4">
         <button
           onClick={handleLogout}
-          className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-500 text-lg"
+          className="w-full bg-tertiary text-background py-2 rounded-md hover:bg-accent text-lg"
         >
           Logout
         </button>
       </div>
     </div>
   );
+  
 };
 
 export default Sidebar;

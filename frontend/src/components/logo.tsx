@@ -1,10 +1,6 @@
 import React from "react";
 import Image from "next/image";
-
-interface LogoProps {
-  width?: number;
-  height?: number;
-}
+import { LogoProps } from "@/interfaces";
 
 const Logo: React.FC<LogoProps> = ({ width = 96, height = 96 }) => {
   return (

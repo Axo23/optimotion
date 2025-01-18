@@ -1,15 +1,6 @@
 import React from "react";
+import { SidebarProps } from "@/interfaces";
 
-interface TrainerInteraction {
-  _id: string;
-  title: string;
-}
-
-interface SidebarProps {
-  interactions: TrainerInteraction[];
-  onSelectConversation: (id: string) => void;
-  onStartNewConversation: () => void; // Prop to handle new session creation
-}
 
 const TrainerInteractionSidebar: React.FC<SidebarProps> = ({
   interactions,
@@ -17,27 +8,25 @@ const TrainerInteractionSidebar: React.FC<SidebarProps> = ({
   onStartNewConversation,
 }) => {
   return (
-    <div className="w-64 bg-gray-800 text-white h-full p-4">
-      <h2 className="text-xl font-bold mb-4">Your Conversations</h2>
-      
-      {/* Start New Coaching Session Button */}
+    <div className="w-96 bg-secondary text-foreground h-full p-4">
+      <h2 className="text-xl text-center font-bold mb-4">Your Conversations</h2>
+  
       <button
         onClick={onStartNewConversation}
-        className="w-full mb-4 bg-lightblue text-black py-2 rounded-md hover:bg-orange transition"
+        className="w-full mb-4 bg-accent text-background py-2 rounded-md hover:bg-tertiary transition"
       >
         Start New Coaching Session
       </button>
-
-      {/* Existing Conversations */}
+  
       {interactions.length === 0 ? (
-        <p>No conversations found</p>
+        <p className="text-neutral">No conversations found</p>
       ) : (
         <ul className="space-y-2">
           {interactions.map((interaction) => (
             <li
               key={interaction._id}
               onClick={() => onSelectConversation(interaction._id)}
-              className="cursor-pointer p-2 bg-gray-700 rounded hover:bg-gray-600 transition"
+              className="cursor-pointer p-2 bg-primary rounded hover:bg-secondary transition text-lg"
             >
               {interaction.title || "Untitled Conversation"}
             </li>

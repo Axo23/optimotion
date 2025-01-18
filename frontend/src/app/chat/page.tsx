@@ -6,8 +6,7 @@ import MessageList from "@/components/messageList";
 import Logo from "@/components/logo";
 import BurgerMenu from "@/components/burgerMenu";
 import Sidebar from "@/components/sidebar";
-import { Message } from "@/types/message";
-import { TrainerInteraction } from "@/types/trainerInteraction";
+import { TrainerInteraction, Message } from "@/interfaces";
 
 const ChatPage: React.FC = () => {
   const [trainerInteractions, setTrainerInteractions] = useState<TrainerInteraction[]>([]);
@@ -121,27 +120,27 @@ const ChatPage: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-black text-lightblue relative">
+    <div className="flex h-screen bg-background text-foreground relative">
       <TrainerInteractionSidebar
         interactions={trainerInteractions}
         onSelectConversation={handleSelectConversation}
         onStartNewConversation={handleStartNewConversation}
       />
-
-      <div className="flex-1 flex flex-col ml-64">
+      
+      <div className="flex-1 flex flex-col ml-40">
         <div className="py-4 text-center">
           <Logo width={150} height={150} />
         </div>
-
-        <div className="flex-grow overflow-auto px-[10%] py-4">
+  
+        <div className="flex-grow overflow-auto pr-[15%] py-4">
           {loading ? (
-            <p className="text-center text-gray-300">Loading messages...</p>
+            <p className="text-center text-neutral">Loading messages...</p>
           ) : (
             <MessageList messages={messages} loading={false} />
           )}
         </div>
-
-        <div className="px-[10%] pb-4">
+  
+        <div className="pr-[15%] pb-4">
           <ChatInput
             onNewMessage={handleNewMessages}
             trainerInteractionID={trainerInteractionID || undefined}
@@ -150,10 +149,10 @@ const ChatPage: React.FC = () => {
           />
         </div>
       </div>
-
+  
       <BurgerMenu sidebarContent={<Sidebar />} />
     </div>
-  );
+  );  
 };
 
 export default ChatPage;

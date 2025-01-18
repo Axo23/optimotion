@@ -5,17 +5,7 @@ import AuthMiddleware from '@/components/authMiddleware';
 import Sidebar from '@/components/sidebar';
 import Logo from '@/components/logo';
 import BurgerMenu from "@/components/burgerMenu";
-
-interface User {
-  name: string;
-  email: string;
-  password: string;
-  age: string;
-  weight: string;
-  height: string;
-  fitnessLevel: string;
-  goals: string[];
-}
+import { User } from "@/interfaces";
 
 const ProfilePage: React.FC = () => {
   const [user, setUser] = useState<User>({
@@ -96,72 +86,72 @@ const ProfilePage: React.FC = () => {
 
   return (
     <AuthMiddleware>
-      <div className="min-h-screen bg-black text-lightblue relative">
+      <div className="min-h-screen bg-background text-tertiary relative">
         <Logo width={150} height={150} />
         <div className="flex flex-col items-center justify-center min-h-screen">
-          <div className="max-w-3xl w-full bg-gray-900 shadow-md rounded-lg p-6 text-lightblue">
-            <h1 className="text-3xl font-bold mb-6 text-center">Profile</h1>
+          <div className="max-w-3xl w-full bg-secondary shadow-md rounded-lg p-6">
+            <h1 className="text-3xl font-bold mb-6 text-center text-primary">Profile</h1>
             <div className="space-y-4">
               <div>
-                <label className="block text-xl font-medium">Name</label>
+                <label className="block text-xl font-medium text-tertiary">Name</label>
                 <input
                   type="text"
                   value={user.name}
                   onChange={(e) => setUser({ ...user, name: e.target.value })}
-                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
+                  className="w-full mt-1 p-2 border border-primary rounded-md bg-background text-tertiary"
                 />
               </div>
               <div>
-                <label className="block text-xl font-medium">Email</label>
+                <label className="block text-xl font-medium text-tertiary">Email</label>
                 <input
                   type="email"
                   value={user.email}
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
-                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
+                  className="w-full mt-1 p-2 border border-primary rounded-md bg-background text-tertiary"
                 />
               </div>
               <div>
-                <label className="block text-xl font-medium">Password</label>
+                <label className="block text-xl font-medium text-tertiary">Password</label>
                 <input
                   type="password"
                   value={user.password}
                   onChange={(e) => setUser({ ...user, password: e.target.value })}
-                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
+                  className="w-full mt-1 p-2 border border-primary rounded-md bg-background text-tertiary"
                 />
               </div>
               <div>
-                <label className="block text-xl font-medium">Age</label>
+                <label className="block text-xl font-medium text-tertiary">Age</label>
                 <input
                   type="text"
                   value={user.age}
                   onChange={(e) => setUser({ ...user, age: e.target.value })}
-                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
+                  className="w-full mt-1 p-2 border border-primary rounded-md bg-background text-tertiary"
                 />
               </div>
               <div>
-                <label className="block text-xl font-medium">Weight (kg)</label>
+                <label className="block text-xl font-medium text-tertiary">Weight (kg)</label>
                 <input
                   type="text"
                   value={user.weight}
                   onChange={(e) => setUser({ ...user, weight: e.target.value })}
-                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
+                  className="w-full mt-1 p-2 border border-primary rounded-md bg-background text-tertiary"
                 />
               </div>
               <div>
-                <label className="block text-xl font-medium">Height (cm)</label>
+                <label className="block text-xl font-medium text-tertiary">Height (cm)</label>
                 <input
                   type="text"
                   value={user.height}
                   onChange={(e) => setUser({ ...user, height: e.target.value })}
-                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
+                  className="w-full mt-1 p-2 border border-primary rounded-md bg-background text-tertiary"
                 />
               </div>
               <div>
-                <label className="block text-xl font-medium">Fitness Level</label>
+                <label className="block text-xl font-medium text-tertiary">Fitness Level</label>
                 <select
                   value={user.fitnessLevel}
                   onChange={(e) => setUser({ ...user, fitnessLevel: e.target.value })}
-                  className="w-full mt-1 p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
+                  className="w-full mt-1 p-2 border border-primary rounded-md bg-background text-tertiary"
                 >
                   <option value="Sedentary">Sedentary</option>
                   <option value="Beginner">Beginner</option>
@@ -171,7 +161,7 @@ const ProfilePage: React.FC = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-xl font-medium">Goals</label>
+                <label className="block text-xl font-medium text-tertiary">Goals</label>
                 <ul className="space-y-2 mt-2">
                   {user.goals.map((goal, index) => (
                     <li key={index} className="flex items-center">
@@ -191,11 +181,11 @@ const ProfilePage: React.FC = () => {
                     value={newGoal}
                     onChange={(e) => setNewGoal(e.target.value)}
                     placeholder="Add a new goal"
-                    className="flex-grow p-2 border border-gray-600 rounded-md bg-gray-700 text-white"
+                    className="flex-grow p-2 border border-primary rounded-md bg-background text-tertiary"
                   />
                   <button
                     onClick={handleAddGoal}
-                    className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    className="ml-2 px-4 py-2 bg-primary text-background rounded-md hover:bg-tertiary"
                   >
                     Add
                   </button>
@@ -204,7 +194,7 @@ const ProfilePage: React.FC = () => {
               <div className="text-right">
                 <button
                   onClick={handleSaveChanges}
-                  className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  className="px-6 py-2 bg-primary text-background rounded-md hover:bg-tertiary"
                 >
                   Save Changes
                 </button>
@@ -215,6 +205,7 @@ const ProfilePage: React.FC = () => {
         {/* Burger Menu for Right Sidebar */}
         <BurgerMenu sidebarContent={<Sidebar />} />
       </div>
+
     </AuthMiddleware>
   );
 };

@@ -10,12 +10,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        darkgrey: "#5D5D5D",
-        black: "#1B1B1B",
-        lightblue: "#00A6E4",
-        orange: "#FF6024"
+        background: "#212121", // Dark background
+        primary: "#8083ff", // Vibrant periwinkle blue
+        secondary: "#373544", // Deep muted gray
+        tertiary: "#d3fbd8", // Soft mint green
+        accent: "#8083ff", // Accent color (same as primary for consistency)
       },
     },
   },
