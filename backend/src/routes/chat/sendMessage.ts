@@ -1,14 +1,18 @@
 import { Response } from 'express';
 import { MessageModel } from '../../models/MessageSchema';
 import { TrainerInteractionModel } from '../../models/TrainerInteractionSchema';
+import { UserModel } from '../../models/UserSchema';
 import { getOpenAIResponse } from '../../utils/getOpenAIResponse';
 import { IGetUserAuthInfoRequest } from '../../types/requests';
 import { ChatGptMessage } from '../../types/chatGPTMessage';
 import { MessageRequestBody } from '../../types/messageRequestBody';
+import { UserDataSubset } from '../../types/userData';
+import { extractJsonFromResponse } from '../../utils/extractJsonFromResponse';
+import { saveUserData } from "../../services/saveUserData";
 
 export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): Promise<void> => {
   const { content, sender, trainerInteractionID }: MessageRequestBody = req.body;
-  
+
   if (!content || !sender) {
     res.status(400).json({ message: 'Content and sender are required.' });
     return;
@@ -22,9 +26,22 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
   }
 
   try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: 'User not found.' });
+      return;
+    }
+
+    const userData: UserDataSubset = {
+      height: user.height ?? null,
+      weight: user.weight ?? null,
+      fitnessLevel: user.fitnessLevel ?? null,
+      goals: user.goals ?? null,
+      //userNotes: user.userNotes ?? null,
+    };
+
     let trainerInteraction;
 
-    // If no interaction ID is provided, create a new TrainerInteraction
     if (!trainerInteractionID) {
       trainerInteraction = new TrainerInteractionModel({
         userID: userId,
@@ -33,7 +50,6 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
       });
       await trainerInteraction.save();
     } else {
-      // Retrieve the existing TrainerInteraction
       trainerInteraction = await TrainerInteractionModel.findById(trainerInteractionID);
       if (!trainerInteraction) {
         res.status(404).json({ message: 'TrainerInteraction not found.' });
@@ -41,7 +57,6 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
       }
     }
 
-    // Save the user's message
     const userMessage = new MessageModel({
       trainerInteractionID: trainerInteraction._id,
       content,
@@ -50,36 +65,42 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
     });
 
     const savedUserMessage = await userMessage.save();
-
-    // Add the user's message ID to the TrainerInteraction
     trainerInteraction.messages.push(savedUserMessage._id);
     await trainerInteraction.save();
 
-    // Load all messages of the interaction
     const messages = await MessageModel.find({ trainerInteractionID }).sort({ timeStamp: 1 });
 
-    const chatGptMessages: ChatGptMessage[] = messages.map((msg) =>  {
-      return {
-        role: msg.sender === "coach" ? "assistant" : "user",
-        content: msg.content,
-        name:  msg.sender === "coach" ? "assistant" : "user"
-      };
-    });
+    const chatGptMessages: ChatGptMessage[] = messages.map((msg) => ({
+      role: msg.sender === 'coach' ? 'assistant' : 'user',
+      content: msg.content,
+      name: msg.sender === 'coach' ? 'assistant' : 'user',
+    }));
 
-    // Fetch the coach's response using OpenAI
-    const coachResponse = await getOpenAIResponse(chatGptMessages);
+    // Get the assistant's response
+    const coachResponse = await getOpenAIResponse(chatGptMessages, userData);
+    console.log("Raw Coach Response:", coachResponse);
 
-    // Save the coach's message
+    // Extract JSON data
+    const updatedUserData = extractJsonFromResponse(coachResponse);
+    console.log("Extracted User Data:", updatedUserData);
+
+    if (updatedUserData) {
+      await saveUserData(userId, updatedUserData);
+    }
+
+    // Remove JSON before sending to the frontend
+    //const userFriendlyResponse = coachResponse.replace(/{.*}/s, '').trim();
+    //console.log("User-Friendly Response:", userFriendlyResponse);
+
+    // Save the coach's response in the database
     const coachMessage = new MessageModel({
       trainerInteractionID: trainerInteraction._id,
-      content: coachResponse,
+      content: coachResponse, // Store the sanitized response
       sender: 'coach',
       timeStamp: new Date(),
     });
 
     const savedCoachMessage = await coachMessage.save();
-
-    // Add the coach's message ID to the TrainerInteraction
     trainerInteraction.messages.push(savedCoachMessage._id);
     await trainerInteraction.save();
 

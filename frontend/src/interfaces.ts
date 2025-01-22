@@ -59,6 +59,7 @@ export interface User {
     height: string;
     fitnessLevel: string;
     goals: string[];
+    preferences: string[];
 }
 
 export interface LoginFormValues {

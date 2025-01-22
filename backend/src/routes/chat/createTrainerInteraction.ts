@@ -15,7 +15,7 @@ export const createTrainerInteraction = async (
     }
 
     const currentTime = new Date();
-    const formattedDate = `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString()}`;
+    const formattedDate = `${currentTime.toLocaleDateString()} ${currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
     const title = `Coach Session from ${formattedDate}`;
 
     // Create a new trainer interaction with a title and timestamp

@@ -17,8 +17,10 @@ const ProfilePage: React.FC = () => {
     height: '',
     fitnessLevel: 'Beginner',
     goals: [],
+    preferences: [],
   });
   const [newGoal, setNewGoal] = useState<string>('');
+  const [newPreference, setNewPreference] = useState<string>('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -32,6 +34,7 @@ const ProfilePage: React.FC = () => {
             ...prevUser,
             ...data.user,
             goals: data.user.goals || [],
+            preferences: data.user.preferences || [],
           }));
         } else {
           console.error(data.message || "Failed to fetch user data");
@@ -53,10 +56,26 @@ const ProfilePage: React.FC = () => {
     setNewGoal('');
   };
 
+  const handleAddPreference = () => {
+    if (newPreference.trim() === '') return;
+    setUser((prev) => ({
+      ...prev,
+      preferences: [...prev.preferences, newPreference.trim()],
+    }));
+    setNewPreference('');
+  };
+
   const handleRemoveGoal = (index: number) => {
     setUser((prev) => ({
       ...prev,
       goals: prev.goals.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleRemovePreference = (index: number) => {
+    setUser((prev) => ({
+      ...prev,
+      preferences: prev.preferences.filter((_, i) => i !== index),
     }));
   };
 
@@ -185,6 +204,37 @@ const ProfilePage: React.FC = () => {
                   />
                   <button
                     onClick={handleAddGoal}
+                    className="ml-2 px-4 py-2 bg-primary text-background rounded-md hover:bg-tertiary"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xl font-medium text-tertiary">Preferences</label>
+                <ul className="space-y-2 mt-2">
+                  {user.preferences.map((preference, index) => (
+                    <li key={index} className="flex items-center">
+                      <span className="flex-grow">{preference}</span>
+                      <button
+                        onClick={() => handleRemovePreference(index)}
+                        className="text-red-400 hover:text-red-600 ml-2"
+                      >
+                        Remove
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-2 flex">
+                  <input
+                    type="text"
+                    value={newPreference}
+                    onChange={(e) => setNewPreference(e.target.value)}
+                    placeholder="Add a new preference"
+                    className="flex-grow p-2 border border-primary rounded-md bg-background text-tertiary"
+                  />
+                  <button
+                    onClick={handleAddPreference}
                     className="ml-2 px-4 py-2 bg-primary text-background rounded-md hover:bg-tertiary"
                   >
                     Add
