@@ -66,4 +66,25 @@ export interface LoginFormValues {
   email: string;
   password: string;
 }
+
+export interface Exercise {
+    _id: string;
+    name: string;
+    instructions?: string[];
+}
+export interface WorkoutExercise {
+    exerciseID: Exercise;
+    sets: number;
+    reps: number;
+    notes: string;
+}
   
+export interface Workout {
+    name: string;
+    exercises: WorkoutExercise[];
+}
+  
+export interface WorkoutPlan {
+    name: string;
+    workouts: Workout[];
+}

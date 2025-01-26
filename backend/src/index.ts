@@ -3,7 +3,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import { connectDB } from './config/db';
-import { handleChat } from './routes/api/chat';
 import userRouter from "./routes/user/userRoutes";
 import chatRouter from "./routes/chat/chatRoutes";
 
@@ -22,7 +21,6 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.post('/routes/api/chat', handleChat);
 app.use("/routes/user", userRouter);
 app.use("/routes/chat", chatRouter);
 

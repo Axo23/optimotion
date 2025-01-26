@@ -1,13 +1,9 @@
-import mongoose, { Schema, Document } from "mongoose";
+
+import mongoose, { Schema } from "mongoose";
 
 const WorkoutSchema = new mongoose.Schema({
-    userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
     name: { type: String, required: true },
-    exercises: [{ type: mongoose.Schema.Types.ObjectId, ref: "WorkoutExercise" }], // Reference to Exercise
-    duration: { type: Number, required: true },
-    startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
+    exercises: [{ type: Schema.Types.ObjectId, ref: "WorkoutExercise" }],
   });
   
-  export const WorkoutModel = mongoose.model("Workout", WorkoutSchema);
-  
+  export const WorkoutSchemaModel = mongoose.model("Workout", WorkoutSchema);

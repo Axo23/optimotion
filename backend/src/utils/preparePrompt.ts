@@ -11,7 +11,7 @@ export const preparePrompt = (userData: UserDataSubset): string => {
   else missingData.push('Weight (in kg)');
   
   if (userData.fitnessLevel) availableData.push(`Fitness Level: ${userData.fitnessLevel}`);
-  else missingData.push('Fitness Level (Sedentary, Beginner, Intermediate, Advanced, Elite)');
+  else missingData.push('Fitness Level (Beginner, Intermediate, Expert)');
   
   if (userData.goals && userData.goals.length > 0) {
     availableData.push(`Fitness Goals: ${userData.goals.join(', ')}`);
@@ -43,13 +43,39 @@ export const preparePrompt = (userData: UserDataSubset): string => {
 
     If any details are still missing, respond in a friendly and conversational tone to ask for them.
 
-    If all the necessary details have been provided, generate a JSON object with the user's data in the following format:
+    If all the necessary details have been provided, summarize the user's data in a clear and concise list as follows.:
+
+    <ul>
+    <li>Height: <value in cm></li>
+    <li>Weight: <value in kg></li>
+    <li>Fitness Level: <string></li>
+    <li>Goals: <list of fitness goals as strings></li>
+    </ul>
+    After providing the summary, include the JSON object as the final element in your response. Do not include any additional text before or after the JSON object. The JSON object must follow this format:
     {
       "height": <value in cm>,
       "weight": <value in kg>,
       "fitnessLevel": <string>,
-      "goals": [<list of fitness goals as strings>],
+      "goals": [<list of fitness goals as strings>]
     }
+
+    Example response:
+    ---
+    Here’s a summary of your details:
+
+    - Height: 178 cm
+    - Weight: 78 kg
+    - Fitness Level: Advanced
+    - Goals: Get Lean
+
+    {
+      "height": 178,
+      "weight": 78,
+      "fitnessLevel": "Advanced",
+      "goals": ["Get Lean"]
+    }
+    ---
+    Strictly adhere to this format.
   `;
 };
 

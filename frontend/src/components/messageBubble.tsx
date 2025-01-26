@@ -7,12 +7,11 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, sender }) => {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} my-2`}>
       <div
+        dangerouslySetInnerHTML={{__html: message}}
         className={`px-4 py-2 rounded-lg shadow ${
           isUser ? "bg-accent text-background" : "bg-tertiary text-background"
         }`}
-      >
-        {message}
-      </div>
+      />
     </div>
   );
 };

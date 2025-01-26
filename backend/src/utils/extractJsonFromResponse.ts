@@ -7,7 +7,6 @@ export const extractJsonFromResponse = (response: string): UserDataSubset | null
     if (jsonMatch) {
       try {
         const parsedData = JSON.parse(jsonMatch[0]);
-        console.log("Parsed Data:", parsedData);
         return {
           height: parsedData.height || null,
           weight: parsedData.weight || null,

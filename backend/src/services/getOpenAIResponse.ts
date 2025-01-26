@@ -1,12 +1,9 @@
-import OpenAI from 'openai';
+import openai from "../config/openaiClient";
 import { ChatGptMessage } from '../types/chatGPTMessage';
-import { preparePrompt } from './preparePrompt';
+import { preparePrompt } from '../utils/preparePrompt';
 import { UserDataSubset } from "../types/userData";
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+
 
 export const getOpenAIResponse = async (
   messages: ChatGptMessage[],

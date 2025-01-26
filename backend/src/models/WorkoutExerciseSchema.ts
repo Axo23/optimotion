@@ -1,15 +1,10 @@
-import mongoose from "mongoose";
-import { ExerciseModel } from "./ExerciseSchema";
+import mongoose, { Schema } from "mongoose";
 
 const WorkoutExerciseSchema = new mongoose.Schema({
-  ...ExerciseModel.schema.obj,
-  description: { type: String, required: false },
-  minRepetitions: { type: Number, required: false },
-  maxRepetitions: { type: Number, required: false },
+  exerciseID: { type: Schema.Types.ObjectId, ref: "Exercise", required: true },
+  reps: { type: Number, required: false },
   sets: { type: Number, required: true, default:1 },
-  duration: { type: Number, required: false },
-  superset: { type: Boolean, default: false },
-  pauseTimer: { type: Number, required: false },
+  notes: { type: String, required: false },
 });
 
 export const WorkoutExerciseModel = mongoose.model(

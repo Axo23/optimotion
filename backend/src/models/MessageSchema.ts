@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const MessageSchema = new mongoose.Schema({
     trainerInteractionID: { type: Schema.Types.ObjectId, ref: "TrainerInteraction", required: true },

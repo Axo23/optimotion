@@ -172,11 +172,9 @@ const ProfilePage: React.FC = () => {
                   onChange={(e) => setUser({ ...user, fitnessLevel: e.target.value })}
                   className="w-full mt-1 p-2 border border-primary rounded-md bg-background text-tertiary"
                 >
-                  <option value="Sedentary">Sedentary</option>
                   <option value="Beginner">Beginner</option>
                   <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
-                  <option value="Elite">Elite</option>
+                  <option value="Expert">Expert</option>
                 </select>
               </div>
               <div>

@@ -2,13 +2,14 @@ import { Response } from 'express';
 import { MessageModel } from '../../models/MessageSchema';
 import { TrainerInteractionModel } from '../../models/TrainerInteractionSchema';
 import { UserModel } from '../../models/UserSchema';
-import { getOpenAIResponse } from '../../utils/getOpenAIResponse';
+import { getOpenAIResponse } from '../../services/getOpenAIResponse';
 import { IGetUserAuthInfoRequest } from '../../types/requests';
 import { ChatGptMessage } from '../../types/chatGPTMessage';
 import { MessageRequestBody } from '../../types/messageRequestBody';
 import { UserDataSubset } from '../../types/userData';
 import { extractJsonFromResponse } from '../../utils/extractJsonFromResponse';
 import { saveUserData } from "../../services/saveUserData";
+import { createWorkoutPlan } from '../../services/createWorkoutPlan';
 
 export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): Promise<void> => {
   const { content, sender, trainerInteractionID }: MessageRequestBody = req.body;
@@ -82,20 +83,28 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
 
     // Extract JSON data
     const updatedUserData = extractJsonFromResponse(coachResponse);
-    console.log("Extracted User Data:", updatedUserData);
 
     if (updatedUserData) {
       await saveUserData(userId, updatedUserData);
     }
 
     // Remove JSON before sending to the frontend
-    //const userFriendlyResponse = coachResponse.replace(/{.*}/s, '').trim();
-    //console.log("User-Friendly Response:", userFriendlyResponse);
+    const userFriendlyResponse = coachResponse.replace(/```json\s*|```|{.*}/gs, '').trim();
+
+    let workoutPlan = null;
+    if(!Object.values(userData).some((value) => !value)) {
+      console.log("All user data available. Generating workout plan...");
+      workoutPlan = await createWorkoutPlan(userId);
+    } else {
+      console.log("User data is still incomplete.");
+    }
+
+    console.log("This workoutplan is in sendMessage:",workoutPlan);
 
     // Save the coach's response in the database
     const coachMessage = new MessageModel({
       trainerInteractionID: trainerInteraction._id,
-      content: coachResponse, // Store the sanitized response
+      content: userFriendlyResponse, // Store the sanitized response
       sender: 'coach',
       timeStamp: new Date(),
     });
