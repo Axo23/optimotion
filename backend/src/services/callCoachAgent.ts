@@ -5,7 +5,7 @@ import { UserDataSubset } from "../types/userData";
 
 
 
-export const getOpenAIResponse = async (
+export const callCoachAgent = async (
   messages: ChatGptMessage[],
   userData: UserDataSubset
 ): Promise<string> => {
@@ -13,7 +13,7 @@ export const getOpenAIResponse = async (
     const prompt = preparePrompt(userData);
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-4o',
       messages: [
         {
           role: 'system',

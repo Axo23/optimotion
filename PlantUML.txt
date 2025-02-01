@@ -1,0 +1,212 @@
+### Seqeunzdiagramm
+@startuml
+actor Nutzer
+participant "Frontend (React/Next.js)" as Frontend
+participant "Backend (Express)" as Backend
+participant "CoachAgent" as CoachAgent
+participant "WorkoutAgent" as WorkoutAgent
+database "MongoDB" as DB
+
+== Chat starten ==
+Nutzer -> Frontend : Chat-Seite öffnen
+Frontend -> Backend : Chat-Sitzung initialisieren
+Backend -> DB : Benutzerdaten abrufen
+DB --> Backend : Benutzerdaten
+alt TrainerInteractionID vorhanden
+    Backend -> DB : TrainerInteraction abrufen
+    DB --> Backend : TrainerInteraction ID
+else
+    Backend -> DB : Neue TrainerInteraction erstellen
+    DB --> Backend : TrainerInteraction ID
+end
+Backend --> Frontend : TrainerInteraction ID
+
+== Nachrichten und Datenübermittlung ==
+loop Solange Daten unvollständig sind
+    Nutzer -> Frontend : Nachricht eingeben
+    Frontend -> Backend : Nachricht senden (Benutzereingabe)
+    Backend -> DB : Nachricht speichern (Benutzereingabe)
+    Backend -> CoachAgent : Benutzereingabe weiterleiten
+    CoachAgent -> Backend : Zusätzliche Daten anfordern
+    Backend -> DB: Antwort speichern (Coach-Nachricht)
+    Backend --> Frontend : Zusätzliche Eingabe anfordern
+    Nutzer -> Frontend : Daten bereitstellen
+    Frontend -> Backend : Aktualisierte Daten senden
+    Backend -> DB : Benutzerdaten speichern
+end
+
+== Trainingsplan generieren ==
+Backend -> WorkoutAgent : Trainingsplan anfordern
+WorkoutAgent -> Backend : Filter für Übungen auswählen und verschicken
+Backend -> DB: Übungen basierend auf Filter abrufen
+DB --> Backend: Übungen
+Backend -> WorkoutAgent: Übergabe Übungen
+WorkoutAgent --> Backend: generierten Trainingsplan 
+Backend -> DB : Generierten Trainingsplan speichern
+DB --> Backend : Bestätigung
+Backend --> CoachAgent : Trainingsplan
+
+== Ergebnis anzeigen ==
+CoachAgent -> Backend : Finales Ergebnis senden
+Backend -> DB : Antwort speichern (Coach-Nachricht)
+Backend --> Frontend : Antwort an Nutzer übermitteln
+Frontend --> Nutzer : Antwort anzeigen
+
+== Trainingsplan einsehen ==
+Nutzer -> Frontend : Workouts-Seite öffnen
+Frontend -> Backend : Trainingsplan abrufen
+Backend -> DB : Trainingsplan abrufen
+DB --> Backend : Trainingsplan-Daten
+Backend --> Frontend : Trainingsplan zurückgeben
+Frontend --> Nutzer : Trainingsplan anzeigen
+Nutzer -> Frontend : Trainingsplan ansehen
+@enduml
+
+########################################################################
+
+### Komponentendiagramm:
+@startuml
+' Style for components and interfaces
+skinparam componentStyle uml2
+
+package "Frontend" {
+    component [React/Next.js App]
+}
+
+package "Backend" {
+    component [userRoutes] as UR
+    component [chatRoutes] as CR
+    component [UserController] as UC
+    component [ChatController] as CC
+    component [UserService] as US
+    component [ChatService] as CS
+}
+
+database "MongoDB" {
+    component [UserModel]
+    component [MessageModel]
+    component [TrainerInteractionModel]
+    component [WorkoutPlanModel]
+    component [ExerciseModel]
+}
+
+package "External APIs" {
+    interface (OpenAI API)
+    interface (RapidAPI)
+}
+
+' Frontend <-> Backend
+[React/Next.js App] --> UR : User Requests
+[React/Next.js App] --> CR : Chat Messages
+
+' Backend Controllers
+UR --> UC : Route Handling
+CR --> CC : Route Handling
+
+' Services and Database
+UC --> US : Business Logic
+US --> [UserModel] : CRUD Operations
+CC --> CS : Business Logic
+CS --> [MessageModel] : Save/Load Messages
+CS --> [TrainerInteractionModel] : Save/Load Interactions
+CS --> [WorkoutPlanModel] : Manage Plans
+CS --> [ExerciseModel] : Retrieve Exercises
+
+' Backend <-> External APIs
+CR --> (OpenAI API) : Generate Response
+(RapidAPI) --> [ExerciseModel] : Import Exercises
+@enduml
+
+
+########################################################################
+
+### JSON Data Diagramm:
+@startjson
+{
+  "User": {
+    "name": "String",
+    "email": "String",
+    "password": "String",
+    "age": "Number",
+    "weight": "Number",
+    "height": "Number",
+    "fitnessLevel": "String",
+    "goals": ["String"],
+    "userNotes": ["String"]
+  },
+  "TrainerInteraction": {
+    "userID": "ObjectId (ref: User)",
+    "messages": ["ObjectId (ref: Message)"],
+    "timeStamp": "Date",
+    "title": "String"
+  },
+  "Message": {
+    "trainerInteractionID": "ObjectId (ref: TrainerInteraction)",
+    "timeStamp": "Date",
+    "content": "String",
+    "sender": "String"
+  },
+  "WorkoutPlan": {
+    "userID": "ObjectId (ref: User)",
+    "name": "String",
+    "workouts": ["ObjectId (ref: Workout)"]
+  },
+  "Workout": {
+    "name": "String",
+    "exercises": ["ObjectId (ref: WorkoutExercise)"]
+  },
+  "WorkoutExercise": {
+    "exerciseID": "ObjectId (ref: Exercise)",
+    "reps": "Number",
+    "sets": "Number",
+    "notes": "String"
+  },
+  "Exercise": {
+    "name": "String",
+    "category": "String",
+    "primaryMuscles": ["String"],
+    "secondaryMuscles": ["String"],
+    "level": "String",
+    "equipment": "String",
+    "instructions": ["String"],
+    "force": "String",
+    "mechanic": "String"
+  }
+}
+@endjson
+
+########################################################################
+
+### Use Case Diagramm:
+@startuml
+top to bottom direction
+
+actor Benutzer as User
+actor "Virtueller Trainer (ChatGPT)" as Trainer
+
+rectangle "Fitnessplattform" {
+    usecase "Registrierung" as UC1
+    usecase "Anmeldung" as UC2
+    usecase "Profilverwaltung" as UC3
+    usecase "Workouts einsehen" as UC4
+    usecase "Interaktion mit virtuellem Trainer" as UC5
+    usecase "Datenabfrage durch Trainer" as UC6
+}
+
+' Assoziationen
+User --> UC1 : Registriert sich
+User --> UC2 : Meldet sich an
+User --> UC3 : Profil einsehen/ändern
+User --> UC4 : Sieht Workouts an
+User --> UC5 : Interagiert mit Trainer
+
+
+' Include-Beziehung
+UC5 <.. UC6 : <<include>>
+
+
+' Trainer-Beziehung
+UC6 <-- Trainer : Fragt Daten ab und generiert Plan
+@enduml
+
+########################################################################

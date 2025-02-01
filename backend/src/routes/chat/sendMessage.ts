@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { MessageModel } from '../../models/MessageSchema';
 import { TrainerInteractionModel } from '../../models/TrainerInteractionSchema';
 import { UserModel } from '../../models/UserSchema';
-import { getOpenAIResponse } from '../../services/getOpenAIResponse';
+import { callCoachAgent } from '../../services/callCoachAgent';
 import { IGetUserAuthInfoRequest } from '../../types/requests';
 import { ChatGptMessage } from '../../types/chatGPTMessage';
 import { MessageRequestBody } from '../../types/messageRequestBody';
@@ -78,7 +78,7 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
     }));
 
     // Get the assistant's response
-    const coachResponse = await getOpenAIResponse(chatGptMessages, userData);
+    const coachResponse = await callCoachAgent(chatGptMessages, userData);
     console.log("Raw Coach Response:", coachResponse);
 
     // Extract JSON data
@@ -93,13 +93,10 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
 
     let workoutPlan = null;
     if(!Object.values(userData).some((value) => !value)) {
-      console.log("All user data available. Generating workout plan...");
       workoutPlan = await createWorkoutPlan(userId);
     } else {
       console.log("User data is still incomplete.");
     }
-
-    console.log("This workoutplan is in sendMessage:",workoutPlan);
 
     // Save the coach's response in the database
     const coachMessage = new MessageModel({

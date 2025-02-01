@@ -34,7 +34,6 @@ export const suggestFilters = async (userData: UserDataSubset): Promise<any> => 
   });
 
   const response = completion.choices[0]?.message?.content;
-  console.log(response);
   if (!response) {
     throw new Error("No response from WorkoutAgent.");
   }
@@ -66,7 +65,7 @@ export const fetchExercisesWithFilters = async (filters: any): Promise<any[]> =>
 
 export const generateWorkoutPlan = async (exercises: any[], userData: UserDataSubset): Promise<string> => {
   const prompt = `
-    You are a professional fitness coach with experience creating personalized workout plans for a wide range of clients. Based on the user's fitness level, goals, and the available exercises, create a realistic and effective workout plan.
+    You are a professional fitness coach with experience creating personalized workout plans for a wide range of clients. Based on the user's fitness level, goals, and the available exercises, create a realistic, effective, and structured workout plan.
 
     User Information:
     - Fitness Level: ${userData.fitnessLevel}
@@ -77,14 +76,15 @@ export const generateWorkoutPlan = async (exercises: any[], userData: UserDataSu
 
     Guidelines:
     - Create a workout plan suitable for a regular individual who is not competing professionally.
-    - The workout plan should consist of **3-5 days of training per week** for general users. If the user has advanced fitness goals or is preparing for competition, consider 5-6 days per week.
+    - The workout plan should consist of **3-5 days of training per week** for general users.
     - Each day should include **5-8 exercises**, ensuring a mix of compound and isolation exercises.
     - Specify the number of sets and repetitions for each exercise based on the fitness level:
       - Beginner: 2-3 sets of 8-12 reps
       - Intermediate: 3-4 sets of 6-12 reps
       - Advanced: 4-5 sets of 4-10 reps
     - Provide notes for each exercise (e.g., rest duration, proper form tips, etc.).
-    - Only include exercises from the provided "Available Exercises" list. The "exercise" field in the response must exactly match the name (e.name) of an exercise from the list.
+    - Only include exercises from the provided "Available Exercises" list.
+      - The "exercise" field in the response must match the "name" field of the exercises exactly, including capitalization, punctuation, and spacing. Mismatches are not allowed.
     - Exclude any details or descriptions for rest days or recovery days.
     - Avoid overly complex or excessive plans. Focus on sustainability and user adherence.
 
@@ -96,10 +96,10 @@ export const generateWorkoutPlan = async (exercises: any[], userData: UserDataSu
           "name": string, // Title of the workout (e.g., "Day 1 - Full Body Strength")
           "exercises": [
             {
-              "exercise": string, // Name of the exercise (must match an exercise in the database exactly)
+              "exercise": string, // Must exactly match one of the provided exercise names
               "sets": number,
               "reps": number,
-              "notes": string // Tips or notes for the exercise
+              "notes": string
             }
           ]
         }
@@ -108,6 +108,7 @@ export const generateWorkoutPlan = async (exercises: any[], userData: UserDataSu
 
     Ensure the response does not include any additional text or formatting like "\`\`\`json".
   `;
+
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4",

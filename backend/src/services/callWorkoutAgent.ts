@@ -19,7 +19,6 @@ export const callWorkoutAgent = async (userData: UserDataSubset): Promise<any> =
 
     // Step 3: Generate a workout plan using the filtered exercises
     const workoutPlan = await generateWorkoutPlan(exercises, userData);
-    console.log("This workoutplan is in callWorkoutAgent:", workoutPlan);
 
     return workoutPlan; // Return the workout plan to be sent to the user or stored
   } catch (error) {

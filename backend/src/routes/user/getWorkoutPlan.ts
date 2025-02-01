@@ -32,7 +32,6 @@ export const getWorkoutPlan = async (req: IGetUserAuthInfoRequest, res: Response
 
     // Step 4: Return the workout plan to the client
     res.status(200).json(workoutPlan);
-    console.log(JSON.stringify(workoutPlan));
   } catch (error) {
     console.error("Error fetching workout plan:", error);
     res.status(500).json({ message: "Server error. Please try again later." });
