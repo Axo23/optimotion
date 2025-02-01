@@ -1,4 +1,4 @@
-import { connectDB } from "./config/db";
+import { connectDB } from "./config/connectDB";
 import { ExerciseModel } from "./models/ExerciseSchema";
 import axios from "axios";
 

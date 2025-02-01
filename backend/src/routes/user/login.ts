@@ -6,8 +6,13 @@ import { UserModel } from "../../models/UserSchema";
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
+  // Validate request body
+  if (!email || !password) {
+    res.status(400).json({ message: "Email and password are required" });
+    return;
+  }
+
   try {
-    // Check if the user exists
     const user = await UserModel.findOne({ email });
     if (!user) {
       res.status(404).json({ message: "Invalid credentials" });
@@ -17,7 +22,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     // Validate password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      res.status(401).json({ message: "Invalid credentials" });
+      res.status(404).json({ message: "Invalid credentials" });
       return;
     }
 
@@ -32,7 +37,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     res.cookie("jwt", token, {
       httpOnly: true, // Prevents JavaScript access
       secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-      sameSite: "strict", // Protects against CSRF attacks
+      sameSite: "strict",
       maxAge: 60 * 60 * 1000, // Cookie valid for 1 hour
     });
 
