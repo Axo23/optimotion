@@ -11,7 +11,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, loading }) => {
       ))}
       {loading && (
         <div className="flex justify-start">
-          <div className="px-4 py-2 rounded-lg shadow bg-accent text-background animate-pulse">
+          <div className="px-4 py-2 rounded-lg shadow bg-tertiary text-background animate-pulse">
             Coach is typing...
           </div>
         </div>

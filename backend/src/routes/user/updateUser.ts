@@ -14,7 +14,7 @@ export const updateUser = async (req: IGetUserAuthInfoRequest, res: Response): P
   }
 
   // Destructure user fields from the request body
-  const { name, email, password, age, weight, height, fitnessLevel, goals, /*userNotes*/ }: Partial<UserData> = req.body;
+  const { name, email, password, age, weight, height, fitnessLevel, goals, userNotes }: Partial<UserData> = req.body;
 
   try {
     // Create an object to store update data
@@ -26,7 +26,7 @@ export const updateUser = async (req: IGetUserAuthInfoRequest, res: Response): P
       height,
       fitnessLevel,
       goals,
-      //userNotes,
+      userNotes,
     };
 
     // Hash the password if it’s being updated
@@ -34,13 +34,8 @@ export const updateUser = async (req: IGetUserAuthInfoRequest, res: Response): P
       updateData.password = await hashPassword(password);
     }
 
-    // Filter out undefined or null values
-    const sanitizedUpdateData = Object.fromEntries(
-      Object.entries(updateData).filter(([_, value]) => value !== undefined && value !== null)
-    );
-
     // Update the user in the database
-    const updatedUser = await UserModel.findByIdAndUpdate(userId, sanitizedUpdateData, { new: true });
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, { new: true });
 
     if (!updatedUser) {
       res.status(404).json({ message: "User not found." });

@@ -8,7 +8,7 @@ const TrainerInteractionSidebar: React.FC<SidebarProps> = ({
   onStartNewConversation,
 }) => {
   return (
-    <div className="w-96 bg-secondary text-foreground h-full p-4">
+    <div className="w-96 bg-secondary text-foreground h-screen p-4 flex flex-col">
       <h2 className="text-xl text-center font-bold mb-4">Your Conversations</h2>
   
       <button
@@ -21,7 +21,7 @@ const TrainerInteractionSidebar: React.FC<SidebarProps> = ({
       {interactions.length === 0 ? (
         <p className="text-neutral">No conversations found</p>
       ) : (
-        <ul className="space-y-2">
+        <ul className="space-y-2 overflow-y-auto flex-grow pr-2">
           {interactions.map((interaction) => (
             <li
               key={interaction._id}

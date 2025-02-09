@@ -9,8 +9,8 @@ export interface UserData extends Document {
   goals?: string[] | null;
   weight?: number | null;
   height?: number | null;
-  //userNotes?: string[] | null;
+  userNotes?: string[] | null;
 }
 
 // Subset for operations where only specific fields are needed
-export type UserDataSubset = Pick<UserData, "height" | "weight" | "fitnessLevel" | "goals" /*| "userNotes"*/>;
+export type UserDataSubset = Pick<UserData, "height" | "weight" | "fitnessLevel" | "goals" | "userNotes">;

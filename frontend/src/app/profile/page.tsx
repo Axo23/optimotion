@@ -17,10 +17,10 @@ const ProfilePage: React.FC = () => {
     height: '',
     fitnessLevel: 'Beginner',
     goals: [],
-    preferences: [],
+    userNotes: [],
   });
   const [newGoal, setNewGoal] = useState<string>('');
-  const [newPreference, setNewPreference] = useState<string>('');
+  const [newNote, setNewNote] = useState<string>('');
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -34,7 +34,7 @@ const ProfilePage: React.FC = () => {
             ...prevUser,
             ...data.user,
             goals: data.user.goals || [],
-            preferences: data.user.preferences || [],
+            userNotes: data.user.userNotes || [],
           }));
         } else {
           console.error(data.message || "Failed to fetch user data");
@@ -56,13 +56,13 @@ const ProfilePage: React.FC = () => {
     setNewGoal('');
   };
 
-  const handleAddPreference = () => {
-    if (newPreference.trim() === '') return;
+  const handleAddNote = () => {
+    if (newNote.trim() === '') return;
     setUser((prev) => ({
       ...prev,
-      preferences: [...prev.preferences, newPreference.trim()],
+      userNotes: [...prev.userNotes, newNote.trim()],
     }));
-    setNewPreference('');
+    setNewNote('');
   };
 
   const handleRemoveGoal = (index: number) => {
@@ -72,10 +72,10 @@ const ProfilePage: React.FC = () => {
     }));
   };
 
-  const handleRemovePreference = (index: number) => {
+  const handleRemoveNote = (index: number) => {
     setUser((prev) => ({
       ...prev,
-      preferences: prev.preferences.filter((_, i) => i !== index),
+      userNotes: prev.userNotes.filter((_, i) => i !== index),
     }));
   };
 
@@ -209,13 +209,13 @@ const ProfilePage: React.FC = () => {
                 </div>
               </div>
               <div>
-                <label className="block text-xl font-medium text-tertiary">Preferences</label>
+                <label className="block text-xl font-medium text-tertiary">Notes</label>
                 <ul className="space-y-2 mt-2">
-                  {user.preferences.map((preference, index) => (
+                  {user.userNotes.map((note, index) => (
                     <li key={index} className="flex items-center">
-                      <span className="flex-grow">{preference}</span>
+                      <span className="flex-grow">{note}</span>
                       <button
-                        onClick={() => handleRemovePreference(index)}
+                        onClick={() => handleRemoveNote(index)}
                         className="text-red-400 hover:text-red-600 ml-2"
                       >
                         Remove
@@ -226,13 +226,13 @@ const ProfilePage: React.FC = () => {
                 <div className="mt-2 flex">
                   <input
                     type="text"
-                    value={newPreference}
-                    onChange={(e) => setNewPreference(e.target.value)}
-                    placeholder="Add a new preference"
+                    value={newNote}
+                    onChange={(e) => setNewNote(e.target.value)}
+                    placeholder="Add a new note"
                     className="flex-grow p-2 border border-primary rounded-md bg-background text-tertiary"
                   />
                   <button
-                    onClick={handleAddPreference}
+                    onClick={handleAddNote}
                     className="ml-2 px-4 py-2 bg-primary text-background rounded-md hover:bg-tertiary"
                   >
                     Add

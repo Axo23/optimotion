@@ -6,25 +6,24 @@ export const preparePrompt = (userData: UserDataSubset): string => {
 
   if (userData.height) availableData.push(`Height: ${userData.height} cm`);
   else missingData.push('Height (in cm)');
-  
+
   if (userData.weight) availableData.push(`Weight: ${userData.weight} kg`);
   else missingData.push('Weight (in kg)');
-  
+
   if (userData.fitnessLevel) availableData.push(`Fitness Level: ${userData.fitnessLevel}`);
   else missingData.push('Fitness Level (Beginner, Intermediate, Expert)');
-  
+
   if (userData.goals && userData.goals.length > 0) {
     availableData.push(`Fitness Goals: ${userData.goals.join(', ')}`);
   } else {
     missingData.push('Fitness Goals (e.g., lose weight, build muscle, improve endurance)');
   }
 
-  /*if (userData.userNotes && userData.userNotes.length > 0) {
+  if (userData.userNotes && userData.userNotes.length > 0) {
     availableData.push(`User Notes: ${userData.userNotes.join(', ')}`);
   } else {
     missingData.push('User Notes (e.g., types of exercises or restrictions like injuries)');
-  }*/
-  
+  }
 
   const formattedAvailableData = availableData.length
     ? availableData.join('\n')
@@ -41,48 +40,32 @@ export const preparePrompt = (userData: UserDataSubset): string => {
     The following details are still missing:
     ${formattedMissingData}
 
-    If any details are still missing, respond in a friendly and conversational tone to ask for them.
+    If the user explicitly requests a workout plan or all necessary details are complete, respond with the term "TRIGGER_WORKOUT_PLAN" as part of your response. Do not include this term unless you determine that the user wants a workout plan generated.
 
-    If all the necessary details have been provided, summarize the user's data in a clear and concise list as follows.:
+    Example scenario:
+    - If details are missing, ask for the missing details in a friendly and conversational tone.
+    - If all details are complete but the user doesn't request a workout plan, summarize their data and wait for further instructions.
+    - If a workout plan is generated, include the phrase: "Your workout is done! You can check it on the Workouts page."
 
+    Strictly adhere to this format:
     <ul>
     <li>Height: <value in cm></li>
     <li>Weight: <value in kg></li>
     <li>Fitness Level: <string></li>
     <li>Goals: <list of fitness goals as strings></li>
+    <li>User Notes: <list of notes such as exercise preferences, restrictions, injuries, or other relevant information></li>
     </ul>
-    After providing the summary, include the JSON object as the final element in your response. Do not include any additional text before or after the JSON object. The JSON object must follow this format:
     {
       "height": <value in cm>,
       "weight": <value in kg>,
       "fitnessLevel": <string>,
-      "goals": [<list of fitness goals as strings>]
+      "goals": [<list of fitness goals as strings>],
+      "userNotes": [<list of notes such as exercise preferences, restrictions, injuries, or other relevant information>]
     }
-
-    Example response:
+    Example response for workout generation:
     ---
-    Here’s a summary of your details:
-
-    - Height: 178 cm
-    - Weight: 78 kg
-    - Fitness Level: Advanced
-    - Goals: Get Lean
-
-    {
-      "height": 178,
-      "weight": 78,
-      "fitnessLevel": "Advanced",
-      "goals": ["Get Lean"]
-    }
+    Your workout is done! You can check it on the Workouts page.
+    TRIGGER_WORKOUT_PLAN
     ---
-    Strictly adhere to this format.
   `;
 };
-
-
-/* "userNotes": [<list of notes such as exercise preferences, restrictions, injuries, or other relevant information>],
-Examples for userNotes:
-    - Preferences: "I like morning workouts."
-    - Restrictions: "I have a knee injury."
-    - Other notes: "I prefer yoga or low-impact exercises."
-*/

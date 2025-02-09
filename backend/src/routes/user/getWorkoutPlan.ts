@@ -12,7 +12,7 @@ export const getWorkoutPlan = async (req: IGetUserAuthInfoRequest, res: Response
     }
 
     // Step 2: Fetch the user's workout plan
-    const workoutPlan = await WorkoutPlanModel.findOne({ userID: userId })
+    const workoutPlan = await WorkoutPlanModel.find({ userID: userId })
       .populate({
         path: "workouts",
         populate: {
@@ -29,7 +29,7 @@ export const getWorkoutPlan = async (req: IGetUserAuthInfoRequest, res: Response
       res.status(404).json({ message: "No workout plan found for this user." });
       return;
     }
-
+    console.log(workoutPlan);
     // Step 4: Return the workout plan to the client
     res.status(200).json(workoutPlan);
   } catch (error) {

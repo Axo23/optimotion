@@ -59,7 +59,7 @@ export interface User {
     height: string;
     fitnessLevel: string;
     goals: string[];
-    preferences: string[];
+    userNotes: string[];
 }
 
 export interface LoginFormValues {
@@ -85,6 +85,7 @@ export interface Workout {
 }
   
 export interface WorkoutPlan {
+    timeStamp: Date;
     name: string;
     workouts: Workout[];
 }

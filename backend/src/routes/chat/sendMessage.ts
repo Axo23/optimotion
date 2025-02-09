@@ -27,7 +27,7 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
   }
 
   try {
-    const user = await UserModel.findById(userId);
+    let user = await UserModel.findById(userId);
     if (!user) {
       res.status(404).json({ message: 'User not found.' });
       return;
@@ -38,7 +38,7 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
       weight: user.weight ?? null,
       fitnessLevel: user.fitnessLevel ?? null,
       goals: user.goals ?? null,
-      //userNotes: user.userNotes ?? null,
+      userNotes: user.userNotes ?? null,
     };
 
     let trainerInteraction;
@@ -81,27 +81,46 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
     const coachResponse = await callCoachAgent(chatGptMessages, userData);
     console.log("Raw Coach Response:", coachResponse);
 
+    // Check for the "TRIGGER_WORKOUT_PLAN" term
+    const triggerWorkout = coachResponse.includes("TRIGGER_WORKOUT_PLAN");
+
     // Extract JSON data
     const updatedUserData = extractJsonFromResponse(coachResponse);
 
     if (updatedUserData) {
       await saveUserData(userId, updatedUserData);
+      user = await UserModel.findById(userId);
     }
 
+    // Ensure the updated user data is used
+    const updatedUserDataForCheck: UserDataSubset = {
+      height: user?.height ?? null,
+      weight: user?.weight ?? null,
+      fitnessLevel: user?.fitnessLevel ?? null,
+      goals: user?.goals ?? null,
+      userNotes: user?.userNotes ?? null,
+    };
     // Remove JSON before sending to the frontend
-    const userFriendlyResponse = coachResponse.replace(/```json\s*|```|{.*}/gs, '').trim();
+    const userFriendlyResponse = coachResponse
+    .replace(/```json\s*|```|{.*}/gs, '')
+    .replace("TRIGGER_WORKOUT_PLAN", "")
+    .trim();
 
     let workoutPlan = null;
-    if(!Object.values(userData).some((value) => !value)) {
+    if (triggerWorkout &&
+      !Object.values(updatedUserDataForCheck).some((value) => !value) &&
+      Array.isArray(updatedUserDataForCheck.goals) && updatedUserDataForCheck.goals.length > 0 &&
+      Array.isArray(updatedUserDataForCheck.userNotes) && updatedUserDataForCheck.userNotes.length > 0
+    ) {
       workoutPlan = await createWorkoutPlan(userId);
     } else {
-      console.log("User data is still incomplete.");
+      console.log("User data is incomplete or invalid for generating a workout plan.");
     }
 
     // Save the coach's response in the database
     const coachMessage = new MessageModel({
       trainerInteractionID: trainerInteraction._id,
-      content: userFriendlyResponse, // Store the sanitized response
+      content: userFriendlyResponse,
       sender: 'coach',
       timeStamp: new Date(),
     });

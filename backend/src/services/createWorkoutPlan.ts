@@ -59,7 +59,7 @@ export const createWorkoutPlan = async (userId: string): Promise<any> => {
     // Step 3.3: Create and save Workout
     const workoutDoc = new WorkoutSchemaModel({
       name: workoutName,
-      exercises: savedExercises, // References to WorkoutExercise documents
+      exercises: savedExercises,
     });
     const savedWorkout = await workoutDoc.save();
     savedWorkouts.push(savedWorkout._id);
@@ -68,8 +68,9 @@ export const createWorkoutPlan = async (userId: string): Promise<any> => {
   // Step 3.4: Create and save WorkoutPlan
   const workoutPlan = new WorkoutPlanModel({
     userID: userId,
-    name: planName, // The name of the workout plan
-    workouts: savedWorkouts, // References to Workout documents
+    name: planName,
+    workouts: savedWorkouts,
+    timeStamp: new Date(),
   });
 
   const savedWorkoutPlan = await workoutPlan.save();

@@ -19,6 +19,31 @@ const ChatInput: React.FC<ChatInputProps> = ({
     setIsLoading(true);
 
     try {
+      let interactionID = trainerInteractionID;
+
+      // Create a new TrainerInteraction if none exists
+      if (!trainerInteractionID) {
+        const interactionResponse = await fetch(
+          "http://localhost:5000/routes/chat/createTrainerInteraction",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+          }
+        );
+
+        const newInteraction = await interactionResponse.json();
+
+        if (interactionResponse.ok) {
+          interactionID = newInteraction._id;
+          onNewInteraction(newInteraction._id); // Notify parent of the new interaction
+        } else {
+          console.error("Error creating new interaction:", newInteraction.message);
+          return;
+        }
+      }
+
+      // Send the message to the server
       const response = await fetch("http://localhost:5000/routes/chat/sendMessage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -26,7 +51,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         body: JSON.stringify({
           content: input.trim(),
           sender: "user",
-          trainerInteractionID,
+          trainerInteractionID: interactionID, // Use the selected or newly created interaction ID
         }),
       });
 
@@ -46,10 +71,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
         };
 
         onNewMessage([userMessage, coachMessage]);
-
-        if (!trainerInteractionID) {
-          onNewInteraction(data.trainerInteractionID);
-        }
       } else {
         console.error("Error sending message:", data.message);
       }
@@ -70,7 +91,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
         onChange={(e) => setInput(e.target.value)}
         placeholder="Type your message..."
         className="flex-grow px-4 py-2 border rounded-lg bg-secondary text-foreground focus:outline-none"
-        disabled={isLoading}
       />
       <button
         type="submit"

@@ -15,7 +15,7 @@ export const getMessages = async (req: IGetUserAuthInfoRequest, res: Response): 
     const messages = await MessageModel.find({ trainerInteractionID }).sort({ timeStamp: 1 });
 
     if (!messages || messages.length === 0) {
-      res.status(404).json({ message: "No messages found for this interaction." });
+      //res.status(404).json({ message: "No messages found for this interaction." });
       return;
     }
 

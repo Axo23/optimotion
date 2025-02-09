@@ -133,11 +133,7 @@ const ChatPage: React.FC = () => {
         </div>
   
         <div className="flex-grow overflow-auto pr-[15%] py-4">
-          {loading ? (
-            <p className="text-center text-neutral">Loading messages...</p>
-          ) : (
-            <MessageList messages={messages} loading={false} />
-          )}
+          <MessageList messages={messages} loading={loading} />
         </div>
   
         <div className="pr-[15%] pb-4">
