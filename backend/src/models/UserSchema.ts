@@ -1,5 +1,5 @@
 import mongoose, { Model } from "mongoose";
-import { UserData } from "../types/userData";
+import { UserData } from "../types/interfaces";
 
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },

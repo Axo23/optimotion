@@ -17,7 +17,8 @@ export interface TrainerInteraction {
 export interface SidebarProps {
     interactions: TrainerInteraction[];
     onSelectConversation: (id: string) => void;
-    onStartNewConversation: () => void; // Prop to handle new session creation
+    onStartNewConversation: () => void;
+    onDeleteConversation: (id: string) => void;
 }
 
 export interface MessageBubbleProps {
@@ -85,6 +86,7 @@ export interface Workout {
 }
   
 export interface WorkoutPlan {
+    _id: string;
     timeStamp: Date;
     name: string;
     workouts: Workout[];

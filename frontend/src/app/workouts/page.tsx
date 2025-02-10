@@ -44,6 +44,31 @@ const WorkoutPage: React.FC = () => {
     fetchWorkoutPlans();
   }, []);
 
+  const handleDeleteWorkout = async (workoutPlanId: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/routes/user/deleteWorkoutPlan/${workoutPlanId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete the workout plan.");
+      }
+
+      // Update the state to remove the deleted workout plan
+      setWorkoutPlans((prev) => prev.filter((plan) => plan._id !== workoutPlanId));
+    } catch (err) {
+      console.error("Error deleting workout plan:", err);
+      setError(err instanceof Error ? err.message : "An unknown error occurred.");
+    }
+  };
+
   if (loading) return <p className="text-center">Loading...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
@@ -51,15 +76,21 @@ const WorkoutPage: React.FC = () => {
     <AuthMiddleware>
       <div className="min-h-screen bg-background text-tertiary flex flex-col items-center p-6">
         <Logo width={150} height={150} />
-        <div className="w-full  flex flex-wrap justify-between gap-6 mt-28">
+        <div className="w-full flex flex-wrap justify-between gap-6 mt-28">
           {workoutPlans.map((workoutPlan, index) => (
             <div
               key={index}
               className="bg-secondary shadow-lg rounded-lg p-6 w-full"
             >
-              <h1 className="text-3xl font-bold mb-4 text-center text-primary">
-                {workoutPlan.name}
-              </h1>
+              <div className="flex justify-between items-center mb-4">
+                <h1 className="text-3xl font-bold text-primary">{workoutPlan.name}</h1>
+                <button
+                  onClick={() => handleDeleteWorkout(workoutPlan._id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-700 transition"
+                >
+                  Delete
+                </button>
+              </div>
               {/* Workouts are now placed horizontally */}
               <div className="flex flex-row gap-4">
                 {workoutPlan.workouts.map((workout, idx) => (

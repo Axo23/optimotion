@@ -1,5 +1,5 @@
 import { UserModel } from "../models/UserSchema";
-import { UserData } from "../types/userData";
+import { UserData } from "../types/interfaces";
 
 export const saveUserData = async (userId: string, updates: Partial<UserData>): Promise<UserData | null> => {
     try {

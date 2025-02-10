@@ -9,7 +9,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, loading }) => {
       {messages.map((msg, index) => (
         <MessageBubble key={msg._id || index} message={msg.content} sender={msg.sender} />
       ))}
-      {loading && (
+      {loading && messages.length > 0 && (
         <div className="flex justify-start">
           <div className="px-4 py-2 rounded-lg shadow bg-tertiary text-background animate-pulse">
             Coach is typing...

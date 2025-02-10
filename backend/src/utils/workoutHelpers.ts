@@ -1,9 +1,10 @@
 import openai from "../config/openaiClient";
-import { UserDataSubset } from "../types/userData";
+import { UserDataSubset } from "../types/types";
 import { ExerciseModel } from "../models/ExerciseSchema";
 
 
 export const suggestFilters = async (userData: UserDataSubset): Promise<any> => {
+  console.log(userData);
   const prompt = `
     You are a professional fitness coach and data assistant. Based on the following user data, suggest filters to select exercises from the database.
 
@@ -11,6 +12,7 @@ export const suggestFilters = async (userData: UserDataSubset): Promise<any> => 
     - Fitness Level: ${userData.fitnessLevel || "Not provided"}
     - Goals: ${userData.goals?.join(", ") || "Not provided"}
     - User Notes: ${userData.userNotes?.join(", ") || "Not provided"}
+
     Filters should include:
     - Level: Choose from ["beginner", "intermediate", "expert"]
     - Category: Choose from ["strength", "plyometrics", "cardio", "stretching"]
@@ -21,7 +23,7 @@ export const suggestFilters = async (userData: UserDataSubset): Promise<any> => 
         "category": "<string>",
         "primaryMuscles": ["<string>"],
         "level": "<string>",
-        "equipment": ["body_only"] (only include if user prefers bodyweight training)
+        "equipment": ["body only"] (only include if user prefers bodyweight training)
       }
     
   Ensure the response does not include any additional text or formatting like "\`\`\`json".
@@ -30,10 +32,11 @@ export const suggestFilters = async (userData: UserDataSubset): Promise<any> => 
   const completion = await openai.chat.completions.create({
     model: "gpt-4",
     messages: [{ role: "system", content: prompt }],
-    max_tokens: 500,
+    max_tokens: 700,
   });
 
   const response = completion.choices[0]?.message?.content;
+  console.log("These are the filters:", response);
   if (!response) {
     throw new Error("No response from WorkoutAgent.");
   }
@@ -74,6 +77,7 @@ export const generateWorkoutPlan = async (exercises: any[], userData: UserDataSu
     User Information:
     - Fitness Level: ${userData.fitnessLevel}
     - Goals: ${userData.goals?.join(", ") || "General Fitness"}
+    - User Notes: ${userData.userNotes?.join(", ") || "Not provided"}
   
     Available Exercises:
     ${availableExercisesList}
@@ -87,6 +91,7 @@ export const generateWorkoutPlan = async (exercises: any[], userData: UserDataSu
     - Only include exercises from the provided "Available Exercises" list.
       - The "exercise" field in the response **must exactly match** the "name" field of the exercises exactly, including capitalization, punctuation, spacing and so on. **Mismatches are not allowed.**
     - Exclude any details or descriptions for rest days or recovery days.
+    - Dont even include the rest days in the JSON
     - Avoid overly complex or excessive plans. Focus on sustainability and user adherence.
   
     Respond in JSON format with the following structure:

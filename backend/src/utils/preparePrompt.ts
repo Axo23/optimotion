@@ -1,4 +1,4 @@
-import { UserDataSubset } from "../types/userData";
+import { UserDataSubset } from "../types/types";
 
 export const preparePrompt = (userData: UserDataSubset): string => {
   const availableData: string[] = [];
@@ -34,7 +34,7 @@ export const preparePrompt = (userData: UserDataSubset): string => {
     .join('\n');
 
   return `
-    You are a professional fitness coach. The user has provided the following information:
+    You are a professional fitness coach, who can correctly answer any fitness related questions. The user has provided the following information:
     ${formattedAvailableData}
 
     The following details are still missing:
@@ -45,7 +45,6 @@ export const preparePrompt = (userData: UserDataSubset): string => {
     Example scenario:
     - If details are missing, ask for the missing details in a friendly and conversational tone.
     - If all details are complete but the user doesn't request a workout plan, summarize their data and wait for further instructions.
-    - If a workout plan is generated, include the phrase: "Your workout is done! You can check it on the Workouts page."
 
     Strictly adhere to this format:
     <ul>
@@ -53,18 +52,17 @@ export const preparePrompt = (userData: UserDataSubset): string => {
     <li>Weight: <value in kg></li>
     <li>Fitness Level: <string></li>
     <li>Goals: <list of fitness goals as strings></li>
-    <li>User Notes: <list of notes such as exercise preferences, restrictions, injuries, or other relevant information></li>
+    <li>User Notes: <list of notes such as exercise preferences, restrictions, injuries, other relevant information or "no info"></li>
     </ul>
     {
       "height": <value in cm>,
       "weight": <value in kg>,
       "fitnessLevel": <string>,
       "goals": [<list of fitness goals as strings>],
-      "userNotes": [<list of notes such as exercise preferences, restrictions, injuries, or other relevant information>]
+      "userNotes": [<list of notes such as exercise preferences, restrictions, injuries, other relevant information or "no info">]
     }
     Example response for workout generation:
     ---
-    Your workout is done! You can check it on the Workouts page.
     TRIGGER_WORKOUT_PLAN
     ---
   `;

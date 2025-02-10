@@ -1,4 +1,4 @@
-import { UserDataSubset } from "../types/userData";
+import { UserDataSubset } from "../types/types";
 
 export const extractJsonFromResponse = (response: string): UserDataSubset | null => {
     const jsonRegex = /{.*}/s; // Match JSON-like content

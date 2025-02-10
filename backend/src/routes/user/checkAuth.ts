@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { IGetUserAuthInfoRequest } from "../../types/requests";
+import { IGetUserAuthInfoRequest } from "../../types/interfaces";
 
 export const checkAuth = async (
   req: IGetUserAuthInfoRequest,

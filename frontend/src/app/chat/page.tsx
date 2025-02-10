@@ -39,7 +39,7 @@ const ChatPage: React.FC = () => {
         }
       } catch (error) {
         console.error("Error fetching interactions:", error);
-        setTrainerInteractions([]); // Handle error gracefully
+        setTrainerInteractions([]);
       }
     };
   
@@ -98,6 +98,7 @@ const ChatPage: React.FC = () => {
         setTrainerInteractions((prev) => [newInteraction, ...prev]);
         setTrainerInteractionID(newInteraction._id);
         setMessages([]); // Clear the message list for the new session
+        setLoading(false);
       } else {
         console.error("Error creating new interaction:", newInteraction.message);
       }
@@ -119,12 +120,36 @@ const ChatPage: React.FC = () => {
     setTrainerInteractionID(conversationID);
   };
 
+  const handleDeleteConversation = async (interactionID: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/routes/chat/deleteTrainerInteraction/${interactionID}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        // Remove the deleted interaction from the state
+        setTrainerInteractions((prev) =>
+          prev.filter((interaction) => interaction._id !== interactionID)
+        );
+      } else {
+        console.error("Error deleting conversation:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error deleting conversation:", error);
+    }
+  };
+
   return (
     <div className="flex h-screen bg-background text-foreground relative">
       <TrainerInteractionSidebar
         interactions={trainerInteractions}
         onSelectConversation={handleSelectConversation}
         onStartNewConversation={handleStartNewConversation}
+        onDeleteConversation={handleDeleteConversation}
       />
       
       <div className="flex-1 flex flex-col ml-40">
@@ -132,7 +157,7 @@ const ChatPage: React.FC = () => {
           <Logo width={150} height={150} />
         </div>
   
-        <div className="flex-grow overflow-auto pr-[15%] py-4">
+        <div className="flex-grow overflow-auto pr-[15%] py-4 mt-28">
           <MessageList messages={messages} loading={loading} />
         </div>
   

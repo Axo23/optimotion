@@ -1,5 +1,5 @@
 import { Response, NextFunction } from "express";
-import { IGetUserAuthInfoRequest } from "../../types/requests";
+import { IGetUserAuthInfoRequest } from "../../types/interfaces";
 
 export const authMiddleware = (
   req: IGetUserAuthInfoRequest,

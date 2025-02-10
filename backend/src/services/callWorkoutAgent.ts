@@ -1,5 +1,5 @@
 import { suggestFilters, fetchExercisesWithFilters, generateWorkoutPlan } from "../utils/workoutHelpers";
-import { UserDataSubset } from "../types/userData";
+import { UserDataSubset } from "../types/types";
 
 
 export const callWorkoutAgent = async (userData: UserDataSubset): Promise<any> => {

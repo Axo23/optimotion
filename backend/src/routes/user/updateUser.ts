@@ -1,9 +1,9 @@
-import { IGetUserAuthInfoRequest } from "../../types/requests";
+import { IGetUserAuthInfoRequest } from "../../types/interfaces";
 import { Response } from "express";
 import { UserModel } from "../../models/UserSchema";
 import { hashPassword } from "../../utils/hashPassword";
 import { JwtPayload } from "jsonwebtoken";
-import { UserData } from "../../types/userData";
+import { UserData } from "../../types/interfaces";
 
 export const updateUser = async (req: IGetUserAuthInfoRequest, res: Response): Promise<void> => {
   const userId = (req.user as JwtPayload)?.id;

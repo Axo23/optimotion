@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { WorkoutPlanModel } from "../../models/WorkoutPlanSchema";
-import { IGetUserAuthInfoRequest } from "../../types/requests";
+import { IGetUserAuthInfoRequest } from "../../types/interfaces";
 
 export const getWorkoutPlan = async (req: IGetUserAuthInfoRequest, res: Response): Promise<void> => {
   try {

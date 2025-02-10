@@ -1,7 +1,7 @@
 import openai from "../config/openaiClient";
-import { ChatGptMessage } from '../types/chatGPTMessage';
+import { ChatGptMessage } from '../types/types';
 import { preparePrompt } from '../utils/preparePrompt';
-import { UserDataSubset } from "../types/userData";
+import { UserDataSubset } from "../types/types";
 
 
 

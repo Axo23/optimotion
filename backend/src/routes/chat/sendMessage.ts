@@ -3,10 +3,10 @@ import { MessageModel } from '../../models/MessageSchema';
 import { TrainerInteractionModel } from '../../models/TrainerInteractionSchema';
 import { UserModel } from '../../models/UserSchema';
 import { callCoachAgent } from '../../services/callCoachAgent';
-import { IGetUserAuthInfoRequest } from '../../types/requests';
-import { ChatGptMessage } from '../../types/chatGPTMessage';
-import { MessageRequestBody } from '../../types/messageRequestBody';
-import { UserDataSubset } from '../../types/userData';
+import { IGetUserAuthInfoRequest } from '../../types/interfaces';
+import { ChatGptMessage } from '../../types/types';
+import { MessageRequestBody } from '../../types/types';
+import { UserDataSubset } from '../../types/types';
 import { extractJsonFromResponse } from '../../utils/extractJsonFromResponse';
 import { saveUserData } from "../../services/saveUserData";
 import { createWorkoutPlan } from '../../services/createWorkoutPlan';
@@ -100,11 +100,6 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
       goals: user?.goals ?? null,
       userNotes: user?.userNotes ?? null,
     };
-    // Remove JSON before sending to the frontend
-    const userFriendlyResponse = coachResponse
-    .replace(/```json\s*|```|{.*}/gs, '')
-    .replace("TRIGGER_WORKOUT_PLAN", "")
-    .trim();
 
     let workoutPlan = null;
     if (triggerWorkout &&
@@ -115,6 +110,18 @@ export const sendMessage = async (req: IGetUserAuthInfoRequest, res: Response): 
       workoutPlan = await createWorkoutPlan(userId);
     } else {
       console.log("User data is incomplete or invalid for generating a workout plan.");
+    }
+
+    // Remove JSON before sending to the frontend
+    let userFriendlyResponse = coachResponse
+    .replace(/```json\s*|```|{.*}/gs, '')
+    .replace("TRIGGER_WORKOUT_PLAN", "")
+    .trim();
+
+    // If workout plan was created, append the confirmation message
+    if (workoutPlan) {
+      userFriendlyResponse += ' Your workout is done! You can check it on the <a href="/workouts" style="color: blue; text-decoration: underline;">Workouts</a> page.';
+
     }
 
     // Save the coach's response in the database

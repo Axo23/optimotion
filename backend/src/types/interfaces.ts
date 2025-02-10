@@ -1,4 +1,11 @@
+import { Request } from "express";
+import { JwtPayload } from "jsonwebtoken";
 import { Document } from "mongoose";
+
+export interface IGetUserAuthInfoRequest extends Request {
+  user?: string | JwtPayload;
+}
+
 
 export interface UserData extends Document {
   name: string;
@@ -12,5 +19,4 @@ export interface UserData extends Document {
   userNotes?: string[] | null;
 }
 
-// Subset for operations where only specific fields are needed
-export type UserDataSubset = Pick<UserData, "height" | "weight" | "fitnessLevel" | "goals" | "userNotes">;
+

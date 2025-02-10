@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { MessageModel } from "../../models/MessageSchema";
-import { IGetUserAuthInfoRequest } from "../../types/requests";
+import { IGetUserAuthInfoRequest } from "../../types/interfaces";
 
 export const getMessages = async (req: IGetUserAuthInfoRequest, res: Response): Promise<void> => {
   const { trainerInteractionID } = req.params;

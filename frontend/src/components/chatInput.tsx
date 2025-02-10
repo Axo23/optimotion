@@ -43,6 +43,14 @@ const ChatInput: React.FC<ChatInputProps> = ({
         }
       }
 
+      // Add the user message immediately to the message list
+      const userMessage: Message = {
+        sender: "user",
+        content: input,
+        timeStamp: new Date().toISOString(),
+      };
+      onNewMessage([userMessage]); // Immediately update the parent with the user message
+
       // Send the message to the server
       const response = await fetch("http://localhost:5000/routes/chat/sendMessage", {
         method: "POST",
@@ -51,26 +59,20 @@ const ChatInput: React.FC<ChatInputProps> = ({
         body: JSON.stringify({
           content: input.trim(),
           sender: "user",
-          trainerInteractionID: interactionID, // Use the selected or newly created interaction ID
+          trainerInteractionID: interactionID, // Use the selected or new interaction ID
         }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        const userMessage: Message = {
-          sender: "user",
-          content: input,
-          timeStamp: new Date().toISOString(),
-        };
-
         const coachMessage: Message = {
           sender: "coach",
           content: data.coachMessage.content,
           timeStamp: new Date().toISOString(),
         };
 
-        onNewMessage([userMessage, coachMessage]);
+        onNewMessage([coachMessage]); // Update parent with coach response
       } else {
         console.error("Error sending message:", data.message);
       }

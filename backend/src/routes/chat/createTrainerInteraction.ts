@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { TrainerInteractionModel } from "../../models/TrainerInteractionSchema";
-import { IGetUserAuthInfoRequest } from "../../types/requests";
+import { IGetUserAuthInfoRequest } from "../../types/interfaces";
 
 export const createTrainerInteraction = async (
   req: IGetUserAuthInfoRequest,

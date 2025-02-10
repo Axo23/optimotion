@@ -1,11 +1,12 @@
 import React from "react";
 import { SidebarProps } from "@/interfaces";
-
+import { FiTrash2 } from "react-icons/fi";
 
 const TrainerInteractionSidebar: React.FC<SidebarProps> = ({
   interactions,
   onSelectConversation,
   onStartNewConversation,
+  onDeleteConversation,
 }) => {
   return (
     <div className="w-96 bg-secondary text-foreground h-screen p-4 flex flex-col">
@@ -25,10 +26,23 @@ const TrainerInteractionSidebar: React.FC<SidebarProps> = ({
           {interactions.map((interaction) => (
             <li
               key={interaction._id}
-              onClick={() => onSelectConversation(interaction._id)}
-              className="cursor-pointer p-2 bg-primary rounded hover:bg-secondary transition text-lg"
+              className="flex items-center justify-between p-2 bg-primary rounded hover:bg-secondary transition text-lg"
             >
-              {interaction.title || "Untitled Conversation"}
+              <span
+                onClick={() => onSelectConversation(interaction._id)}
+                className="cursor-pointer flex-grow"
+              >
+                {interaction.title || "Untitled Conversation"}
+              </span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering `onSelectConversation`
+                  onDeleteConversation(interaction._id);
+                }}
+                className="ml-2 bg-tertiary text-black px-2 py-1 rounded hover:bg-primary transition"aria-label="Delete conversation"
+                >
+                <FiTrash2 size={20} />
+              </button>
             </li>
           ))}
         </ul>

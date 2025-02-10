@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { UserModel } from "../../models/UserSchema";
-import { IGetUserAuthInfoRequest } from "../../types/requests";
+import { IGetUserAuthInfoRequest } from "../../types/interfaces";
 
 export const profileUser = async (
   req: IGetUserAuthInfoRequest,
