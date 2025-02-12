@@ -11,13 +11,13 @@ export const createWorkoutPlan = async (userId: string): Promise<any> => {
     throw new Error("User ID is required.");
   }
 
-  // **Step 1: Fetch user data**
+  // Fetch user data
   const user = await UserModel.findById(userId);
   if (!user) {
     throw new Error("User not found.");
   }
 
-  // **Prepare UserDataSubset**
+  // Prepare UserDataSubset
   const userData: UserDataSubset = {
     height: user.height ?? null,
     weight: user.weight ?? null,
@@ -26,10 +26,10 @@ export const createWorkoutPlan = async (userId: string): Promise<any> => {
     userNotes: user.userNotes?? null,
   };
 
-  // **Step 2: Generate the workout plan**
+  // Generate the workout plan
   const workoutPlanData = await callWorkoutAgent(userData);
 
-  // **Step 3: Process and save the workout plan**
+  // Process and save the workout plan
   const { name: planName, workouts } = workoutPlanData;
   const savedWorkouts = [];
 
@@ -40,28 +40,28 @@ export const createWorkoutPlan = async (userId: string): Promise<any> => {
     for (const exercise of exercises) {
       const { exercise: exerciseName, sets, reps, notes } = exercise;
 
-      // **Step 3.1: Find the Exercise document by exact name**
+      // Find the Exercise document by exact name
       let exerciseDoc = await ExerciseModel.findOne({ name: exerciseName });
 
       if (!exerciseDoc) {
         console.warn(`Exact exercise not found: ${exerciseName}. Searching for similar exercises.`);
 
-        // **Step 3.2: Find similar exercise names (case-insensitive, whole word match)**
+        // Find similar exercise names (case-insensitive, whole word match)
         const similarExercises = await ExerciseModel.find({
           name: { $regex: `^${exerciseName}$|\\b${exerciseName}\\b`, $options: "i" },
         });
 
         if (similarExercises.length > 0) {
-          // **Take the first matching exercise**
+          // Take the first matching exercise
           exerciseDoc = similarExercises[0];
           console.log(`Replacing "${exerciseName}" with "${exerciseDoc.name}"`);
         } else {
           console.error(`No similar exercise found for: ${exerciseName}. Skipping.`);
-          continue; // **Skip this exercise if no suitable match is found**
+          continue; // Skip this exercise if no suitable match is found
         }
       }
 
-      // **Step 3.3: Create and save WorkoutExercise**
+      // Create and save WorkoutExercise
       const workoutExercise = new WorkoutExerciseModel({
         exerciseID: exerciseDoc._id,
         sets,
@@ -73,7 +73,7 @@ export const createWorkoutPlan = async (userId: string): Promise<any> => {
       savedExercises.push(savedWorkoutExercise._id);
     }
 
-    // **Step 3.4: Create and save Workout**
+    // Create and save Workout
     const workoutDoc = new WorkoutSchemaModel({
       name: workoutName,
       exercises: savedExercises,
@@ -83,7 +83,7 @@ export const createWorkoutPlan = async (userId: string): Promise<any> => {
     savedWorkouts.push(savedWorkout._id);
   }
 
-  // **Step 3.5: Create and save WorkoutPlan**
+  // Step 3.5: Create and save WorkoutPlan
   const workoutPlan = new WorkoutPlanModel({
     userID: userId,
     name: planName,
@@ -93,5 +93,5 @@ export const createWorkoutPlan = async (userId: string): Promise<any> => {
 
   const savedWorkoutPlan = await workoutPlan.save();
 
-  return savedWorkoutPlan; // **Return the saved workout plan**
+  return savedWorkoutPlan;
 };

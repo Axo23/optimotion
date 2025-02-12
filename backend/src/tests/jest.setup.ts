@@ -15,11 +15,11 @@ jest.mock("../config/jwtMiddleware", () => ({
 }));
 // Run before all tests
 beforeAll(async () => {
-  await connectDB(); // Connect to the test database
+  await connectDB();
 });
 
 // Run after all tests
 afterAll(async () => {
-  await clearTestDatabase(); // Clear remaining data
-  await mongoose.connection.close(); // Close the database connection
+  await clearTestDatabase();
+  await mongoose.connection.close();
 });

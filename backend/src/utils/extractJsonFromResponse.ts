@@ -24,7 +24,7 @@ export const extractJsonFromResponse = (response: string): UserDataSubset | null
   }
 
   console.error("No valid JSON found in the GPT response.");
-  return null; // Return null if no JSON block is found
+  return null;
 };
 
   

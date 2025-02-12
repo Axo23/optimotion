@@ -91,3 +91,7 @@ export interface WorkoutPlan {
     name: string;
     workouts: Workout[];
 }
+
+export interface BurgerMenuProps {
+  sidebarContent: React.ReactNode;
+}

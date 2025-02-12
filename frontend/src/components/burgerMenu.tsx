@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { BurgerMenuProps } from "@/interfaces"
 
-interface BurgerMenuProps {
-  sidebarContent: React.ReactNode; // Content for the sidebar
-}
 
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ sidebarContent }) => {
   const [menuOpen, setMenuOpen] = useState(false);

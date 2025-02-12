@@ -4,14 +4,14 @@ import { IGetUserAuthInfoRequest } from "../../types/interfaces";
 
 export const getWorkoutPlan = async (req: IGetUserAuthInfoRequest, res: Response): Promise<void> => {
   try {
-    // Step 1: Validate user
+    // Validate user
     const userId = (req.user as { id: string })?.id;
     if (!userId) {
       res.status(401).json({ message: "Unauthorized. User ID is missing." });
       return;
     }
 
-    // Step 2: Fetch the user's workout plan
+    // Fetch the user's workout plan
     const workoutPlan = await WorkoutPlanModel.find({ userID: userId })
       .populate({
         path: "workouts",
@@ -24,13 +24,13 @@ export const getWorkoutPlan = async (req: IGetUserAuthInfoRequest, res: Response
         },
       });
 
-    // Step 3: Handle cases where no workout plan is found
+    // Handle cases where no workout plan is found
     if (!workoutPlan) {
       res.status(404).json({ message: "No workout plan found for this user." });
       return;
     }
     console.log(workoutPlan);
-    // Step 4: Return the workout plan to the client
+    // Return the workout plan to the client
     res.status(200).json(workoutPlan);
   } catch (error) {
     console.error("Error fetching workout plan:", error);

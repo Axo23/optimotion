@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Define environment variables for the database URIs
 const uri = process.env.NODE_ENV === "test" ? process.env.TEST_DB_URL : process.env.MONGO_URI;
 
 if (!uri) {
