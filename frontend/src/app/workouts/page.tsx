@@ -14,7 +14,7 @@ const WorkoutPage: React.FC = () => {
   useEffect(() => {
     const fetchWorkoutPlans = async () => {
       try {
-        const response = await fetch("http://localhost:5000/routes/user/getWorkoutPlan", {
+        const response = await fetch("http://localhost:5000/routes/chat/getWorkoutPlan", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -47,7 +47,7 @@ const WorkoutPage: React.FC = () => {
   const handleDeleteWorkout = async (workoutPlanId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/routes/user/deleteWorkoutPlan/${workoutPlanId}`,
+        `http://localhost:5000/routes/chat/deleteWorkoutPlan/${workoutPlanId}`,
         {
           method: "DELETE",
           headers: {

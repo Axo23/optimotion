@@ -6,8 +6,6 @@ import { updateUser } from "./updateUser";
 import { authenticateJWT } from "../../config/jwtMiddleware";
 import { profileUser } from "./profile";
 import { checkAuth } from "./checkAuth";
-import { getWorkoutPlan } from "./getWorkoutPlan";
-import { deleteWorkoutPlan } from "./deleteWorkoutPlan";
 
 const router = express.Router();
 
@@ -17,7 +15,5 @@ router.post("/logout", logoutUser);
 router.put("/updateUser", authenticateJWT, updateUser);
 router.get("/profile", authenticateJWT, profileUser);
 router.get("/checkAuth", authenticateJWT, checkAuth);
-router.get("/getWorkoutPlan", authenticateJWT, getWorkoutPlan);
-router.delete("/deleteWorkoutPlan/:workoutPlanId", authenticateJWT, deleteWorkoutPlan);
 
 export default router;
